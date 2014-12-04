@@ -1,0 +1,66 @@
+<style>
+    .back {
+        background: url('public/img/backdrop.jpg') no-repeat center center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    .layer {
+        background-color: rgba(4, 4, 4, 0.85);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .container a {
+        cursor: pointer;
+    }
+</style>
+<div class="back"></div>
+<div class="layer"></div>
+<div class="main">
+    <div class="container" style="margin-top:50px;">
+        <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+            <div ng-show="loginError" class="alert alert-danger" style="opacity:0.8"><span class="fa fa-warning"></span>&nbsp;&nbsp;{{loginError}}<a href="#" class="pull-right" title="{{ 'REFRESH' | translate }}"><i class="fa fa-refresh"></i></a>
+            </div>
+            <div class="alert alert-warning" style="opacity:0.8; display:none;"><span class="fa fa-certificate"></span>&nbsp;&nbsp;{{ 'PREMIUM_ONLY' | translate }}<a ng-click="browser.open('http://www.topanimestream.com/en/premium')" class="pull-right">{{ 'UPGRADE_NOW' | translate }}</a>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h2>{{ 'SIGN_IN' | translate }} <small>TopAnimeStream</small></h2>
+                    <hr>
+                    <div id="content_upLogin">
+                        <span id="content_lblError" class="text-danger" style="display: block; margin-bottom: 10px;"></span>
+                        <div class="form-group">
+                            <label for="txtUser">{{ 'USERNAME' | translate }}</label>
+                            <input type="text" id="txtUser" tabindex="1" class="form-control" ng-keyup="$event.keyCode == 13 && login()" ng-model="username" placeholder="{{ 'ENTER_USERNAME' | translate }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtPassword">{{ 'PASSWORD' | translate }} <a ng-click="browser.open('http://www.topanimestream.com/en/forgot-password/')">({{ 'FORGOT_PASSWORD' | translate }})</a>
+                            </label>
+                            <input type="password" id="txtPassword" tabindex="2" ng-model="password" class="form-control" ng-keyup="$event.keyCode == 13 && login()" placeholder="{{ 'PASSWORD' | translate }}" required>
+                        </div>
+                        {{isOnline}}
+                        <button class="btn btn-success" ng-hide="loggingIn || isOnline" ng-click="login()">{{ 'SIGN_IN' | translate }}</button>
+                        <button class="btn btn-success" ng-show="loggingIn" disabled><i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;{{ 'AUTHENTICATION' | translate}}</button>
+                        <div>
+                            <hr>
+                            <div>
+                                {{ 'NO_ACCOUNT' | translate }}
+                                <a ng-click="browser.open('http://www.topanimestream.com/en/register')" style="text-decoration: underline">{{ 'SIGN_UP_HERE' | translate }}
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

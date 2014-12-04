@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <a class="close" ng-click="cancel()">&times;</a>
+    <h3 class="modal-title">{{ 'SETTINGS' | translate }}</h3> 
+    <div class="text-muted" style="margin-top:5px;">App version: {{appVersion}} - <a ng-click="showReleaseNotes()" style="cursor:pointer;">{{ 'RELEASE_NOTES' | translate }}</a>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label class="control-label">Anime language match</label>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" style="margin-top:0;">Display animes available <strong>only</strong> in my default language.
+            </label>
+        </div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label class="control-label">API - Secure connection</label>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" style="margin-top:0;">Use secure connection for TopAnimeStream API (<span class="text-success">https</span>)
+            </label>
+        </div>
+    </div>
+    <div class="form-group hide">
+        <hr>
+        <label class="control-label">Account</label>
+        <br>
+        <div>You're not signed in to any accounts. Add a TopAnimeStream account for easy access to your favorite anime videos.</div>
+        <div style="margin-top:5px">
+            <a href="#/login" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add account</a><a ng-click="browser.open('http://www.topanimestream.com/en/register')" class="btn btn-default"><i class="fa fa-user"></i>&nbsp;&nbsp;Register</a>
+        </div>
+
+        <img alt="" src="" height="63" width="63" class="pull-left" />
+        <div class="pull-left" style="margin-left:10px;">
+            <input id="txtUsername" placeholder="Username" class="form-control" type="text">
+            <input id="txtPassword" placeholder="Password" class="form-control" type="password" style="margin-top:5px;">
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label class="control-label">Default language</label>
+        <div class="dropdown" style="margin-top:5px;">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                <i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li ng-class="{active:isLangActive('en')}"><a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
+                </li>
+                <li ng-class="{active:isLangActive('fr')}"><a ng-click="switchLanguage('fr')"><i class="famfamfam-flag-fr"></i>&nbsp;&nbsp;Français</a>
+                </li>
+                <li ng-class="{active:isLangActive('es')}"><a ng-click="switchLanguage('es')"><i class="famfamfam-flag-es"></i>&nbsp;&nbsp;Español</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default btn-sm pull-left" ng-click="cancel()">{{ 'CLOSE' | translate }}</button>
+    <button class="btn btn-success btn-sm pull-right"><i class="fa fa-save"></i>&nbsp;&nbsp;{{ 'SAVE_CHANGES' | translate }}</button>
+    <div class="clearfix"></div>
+</div>

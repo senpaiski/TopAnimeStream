@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html ng-app="aniApp">
+
+<head>
+    <title>TopAnimeStream</title>
+    <!--JQuery-->
+    <script type="text/javascript" src="public/lib/jquery.min.js"></script>
+
+    <!--Angular with routing, resources and animate-->
+    <script type="text/javascript" src="public/lib/angular-1.3.0/angular.min.js"></script>
+    <script type="text/javascript" src="public/lib/angular-1.3.0/angular-resource.min.js"></script>
+    <script type="text/javascript" src="public/lib/angular-1.3.0/angular-route.min.js"></script>
+    <script type="text/javascript" src="public/lib/angular-1.3.0/angular-animate.min.js"></script>
+
+    <!--Bootstrap-->
+    <script type="text/javascript" src="public/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="public/lib/ui-bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="public/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="public/css/non-responsive.css">
+
+    <!-- FAMFAMFAM Flags Icons -->
+    <link rel="stylesheet" type="text/css" href="public/css/famfamfam-flags.css">
+
+    <!-- Angular Infinite Scroll -->
+    <script type="text/javascript" src="public/lib/ng-infinite-scroll.min.js"></script>
+
+    <!-- Angular cache :D -->
+    <script type="text/javascript" src="public/lib/angular-cache.min.js"></script>
+
+    <!-- Angular translate (multiple language databinding) -->
+    <script type="text/javascript" src="public/lib/angular-translate.min.js"></script>
+
+    <!--Font awesome (more icons)-->
+    <link rel="stylesheet" type="text/css" href="public/css/font-awesome.min.css">
+
+    <!--Isotope with ImageLoaded script-->
+    <script type="text/javascript" src="public/lib/isotope.pkgd.min.js"></script>
+    <script type="text/javascript" src="public/lib/imagesloaded.pkgd.min.js"></script>
+    <script type="text/javascript" src="public/lib/angular-masonry.min.js"></script>
+
+    <!--VideoJS-->
+    <script type="text/javascript" src="public/lib/video.js"></script>
+    <link rel="stylesheet" type="text/css" href="public/css/video-js.min.css">
+
+    <!-- Angular loading promise -->
+    <script type="text/javascript" src="public/lib/angular-busy.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="public/css/angular-busy.min.css">
+
+    <!-- Cool hover effect stylesheet -->
+    <link rel="stylesheet" href="public/css/hover-min.css">
+
+    <!-- Linq.js implement all .NET 4.0 methods and many extra methods -->
+    <script type="text/javascript" src="public/lib/linq.min.js"></script>
+    
+    <!--    WinState (Preserve window state between sessions) 
+    <script type="text/javascript" src="public/lib/winstate.js"></script>
+    -->
+    
+    <!--Main-->
+    <link rel="stylesheet" type="text/css" href="public/css/bootstrap-skin.min.css">
+    <link rel="stylesheet" type="text/css" href="public/css/app.css">
+    <script type="text/javascript" src="public/js/app.js"></script>
+    <script type="text/javascript" src="public/js/controllers.js"></script>
+    <script type="text/javascript" src="public/js/routes.js"></script>
+    <script type="text/javascript" src="public/js/factory.js"></script>
+    <script type="text/javascript" src="public/js/services.js"></script>
+    <script type="text/javascript" src="public/js/extensions.js"></script>
+    <style>
+        body {
+            background-color: rgb(243, 243, 243);
+            overflow-x: hidden;
+        }
+        #border-t,
+        #border-b,
+        #border-l,
+        #border-r {
+            position: fixed;
+            background: black;
+            z-index: 9999;
+        }
+        #border-t {
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 1px;
+        }
+        #border-b {
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+        }
+        #border-l {
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+        }
+        #border-r {
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+        }
+        .slide {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .slide.ng-enter,
+        .slide.ng-leave {
+            -webkit-transition: all 1s ease;
+            -moz-transition: all 1s ease;
+            -o-transition: all 1s ease;
+            transition: all 1s ease;
+        }
+        .slide.ng-enter {
+            left: 100%;
+        }
+        .slide.ng-enter-active {
+            left: 0;
+        }
+        .slide.ng-leave {
+            left: 0;
+        }
+        .slide.ng-leave-active {
+            left: -100%;
+        }
+        .main {
+            position: absolute;
+            top: 50px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+
+<body ng-controller="App">
+    <div ng-include src="headerUrl"></div>
+    <div ng-view="" class="slide"></div>
+    <div id="border-t"></div>
+    <div id="border-b"></div>
+    <div id="border-l"></div>
+    <div id="border-r"></div>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{ 'UPDATE' | translate }}&nbsp;<small>TopAnimeStream {{newVersion}}</small></h3> 
+</div>
+<div class="modal-body">
+    <div>{{status}}</div>
+    <progressbar max="100" ng-show="isDownloading" value="percentage"><span>{{loaded}} / {{max}}</span></progressbar>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger btn-sm pull-right" ng-click="close()">{{ 'CLOSE' | translate }}</button>
+    <div class="clearfix"></div>
+</div>

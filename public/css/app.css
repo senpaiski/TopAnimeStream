@@ -1,0 +1,56 @@
+/*Enable window draggin and prevent from selecting text while using the toolbar to drag the entire window*/
+
+.toolbar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    border: thin solid #031722;
+}
+/*Remove navbar collapse*/
+
+.toolbar a {
+    -webkit-app-region: no-drag;
+}
+.toolbar input {
+    -webkit-app-region: no-drag;
+}
+.navbar-nav {
+    margin: 0;
+}
+.navbar-nav > li {
+    float: none;
+    display: inline-block;
+}
+.navbar-nav > li > a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+/*Custom*/
+
+.page-header {
+    border-bottom: 1px solid #D6D6D6;
+}
+/* Absolute Center CSS Spinner */
+
+.loading {
+    position: absolute;
+    z-index: 999;
+    height: 20px;
+
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: white;
+}
+
+.center {
+   width: 300px;
+   height: 300px;
+   position: absolute;
+   left: 50%;
+   top: 50%; 
+   margin-left: -150px;
+   margin-top: -150px;
+}

@@ -1,0 +1,58 @@
+{
+    "name": "TopAnimeStream",
+    "version": "0.0.1",
+    "description": "Watch animes",
+    "private": true,
+    "main": "app://host/index.html",
+    "homepage": "http://www.topanimestream.com",
+    "manifestUrl": "http://www.topanimestream.com/apps/desktop/package.json",
+    "packages": {
+        "mac": {
+            "url": "http://www.topanimestream.com/apps/desktop/mac/topanimestream_app.zip"
+        },
+        "win": {
+            "url": "http://www.topanimestream.com/apps/desktop/win/topanimestream_app.zip"
+        },
+        "linux32": {
+            "url": "http://www.topanimestream.com/apps/desktop/linux32/topanimestream_app.tar.gz"
+        },
+        "linux64": {
+            "url": "http://www.topanimestream.com/apps/desktop/linux64/topanimestream_app.tar.gz"
+        }
+    },
+    "settings": {
+        "apiDataUrl": "http://www.topanimestream.com/AnimeServices/AnimeDataService.svc",
+        "apiUserUrl": "http://www.topanimestream.com/AnimeServices/AnimeService.svc",
+        "useHttps": "false",
+        "languageOnly" : "false",
+        "defaultLanguage": "en"
+    },
+    "dependencies": {
+        "wcf.js": "^0.0.6",
+        "xml2js": "^0.4.4",
+        "node-webkit-updater": "^0.2.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/senpaiski/TopAnimeStream.git"
+    },
+    "webkit": {
+        "plugin": true
+    },
+    "window": {
+        "title": "TopAnimeStream",
+        "toolbar": true,
+        "show": true,
+        "frame": false,
+        "position": "center",
+        "fullscreen": false,
+        "resizable": true,
+        "width": 920,
+        "height": 680,
+        "min_width": 800,
+        "min_height": 600,
+        "icon": "public/img/icon.png"
+    },
+    "author": "topanimestream.com",
+    "license": "ISC"
+}

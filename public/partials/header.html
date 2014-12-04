@@ -1,0 +1,125 @@
+<style>
+    .navbar-nav a {
+        cursor: pointer;
+    }
+    .dropdown-menu a {
+        cursor: pointer;
+    }
+    .navbar-default .navbar-nav>li>a {
+        color: #e6e6e6;
+        height: 48px;
+    }
+    .navbar-nav > li {
+        float: left;
+        display: inline-block;
+    }
+    .list-group-item {
+        cursor: pointer;
+    }
+    .list-group-item:hover {
+        background-color: #FAFAFA;
+    }
+    .list-group-item a:hover {
+        text-decoration: none;
+    }
+</style>
+<nav class="navbar navbar-default navbar-fixed-top toolbar" ng-controller="Toolbar">
+    <div class="container-fluid">
+        <div ng-hide="isConnected" class="navbar-header pull-left">
+            <div class="navbar-brand">TopAnimeStream App <small>{{ 'BETA' | translate }}  {{appVersion}}</small>
+            </div>
+        </div>
+        <ul ng-hide="!isConnected" class="nav navbar-nav ng-hide">
+            <li>
+                <img alt="" ng-src="{{user.ProfilePic.formatPosterPath(154)}}" style="max-height:50px;">
+            </li>
+            <li class="dropdown open">
+                <a ng-href="/en/profile/{{user.Username}}/" class="dropdown-toggle" style="background-color: #1c3e50; color: #fff; height:50px;">{{user.Username}} <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="margin-left:-67px; min-width:161px;" role="menu">
+                    <li ng-class="{active:isActive('/home')}"><a href="#/home"><span class="fa fa-home"></span>&nbsp;&nbsp;{{ 'HOME' | translate }}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-class="{active:isActive('/list?type=movie')}"><a href="#/list?type=movie"><span class="fa fa-film"></span>&nbsp;&nbsp;{{ 'MOVIES' | translate }}</a>
+                    </li>
+                    <li ng-class="{active:isActive('/list?type=serie')}"><a href="#/list?type=serie"><span class="fa fa-desktop"></span>&nbsp;&nbsp;{{ 'SERIES' | translate }}</a>
+                    </li>
+                    <li ng-class="{active:isActive('/full-list')}"><a href="#/full-list"><span class="fa fa-bars"></span>&nbsp;&nbsp;{{ 'ANIME_LIST' | translate }}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-class="{active:isActive('/settings')}"><a ng-click="showSettings()"><span class="fa fa-cog"></span>&nbsp;&nbsp;{{ 'SETTINGS' | translate }}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a ng-click="showSignOut()"><span class="fa fa-sign-out"></span>&nbsp;&nbsp;{{ 'CLOSE' | translate }}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="hidden-xs navbar-form" style="position:relative;">
+                <div class="input-group" style="min-width: 257px;">
+                    <input type="text" class="form-control" ng-change="search()" ng-model="searchValue" placeholder="{{ 'SEARCH' | translate }}">
+                    <div class="input-group-btn">
+                        <a class="btn btn-default" style="color: #245169;" ng-click="search()"><i class="fa fa-search"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Search results div -->
+                <div ng-show="animeSearch.length" style="position:absolute; min-width: 250px;margin-top: 10px; z-index: 9999999; border-top-left-radius: 0;border-top-right-radius: 0;" class="panel panel-default">
+                    <div class="panel-heading"><ANY translate="RESULT_COUNT" translate-value-count="{{animeSearch.length}}"></ANY>
+                        <i class="fa fa-close pull-right" style="color:#ABABAB; cursor:pointer;" ng-click="reset()"></i>
+                        <div class="clearfix"></div>
+                    </div>
+                    <ul class="list-unstyled list-group" style="max-height:500px; overflow:auto;">
+                        <li class="list-group-item" ng-repeat="anime in animeSearch" style="padding:10px;">
+                            <a ng-href="#/detail/{{anime.AnimeId}}" ng-click="reset()">
+                                <img class="media-object pull-left img-responsive img-thumbnail" ng-src="{{anime.PosterPath.formatPosterPath(300)}}" style="max-height:55px;">
+                                <div class="media-body" style="padding-left:10px;">
+                                    <h5 class="media-heading">{{anime.OriginalName}}</h5>
+                                    <small class="text-muted" ng-hide="anime.IsMovie"><ANY translate="EPISODE_COUNT" translate-value-count="{{anime.EpisodeCount}}"></ANY></small>
+                                    <small class="text-muted" ng-show="anime.IsMovie"><ANY translate="MINUTES_TIME" translate-value-time="{{anime.RunningTime}}"></ANY></small>
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <div class="navbar-right pull-right">
+            <ul id="right-list" class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" style="height: 50px;"> <span class="fa fa-language" title="{{ 'CHANGE_LANGUAGE' | translate }}"></span>
+                    </a>
+                    <ul class="dropdown-menu" 14 role="menu" style="min-width:100px;">
+                        <li ng-class="{active:isLangActive('en')}"><a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
+                        </li>
+                        <li ng-class="{active:isLangActive('fr')}"><a ng-click="switchLanguage('fr')"><i class="famfamfam-flag-fr"></i>&nbsp;&nbsp;Français</a>
+                        </li>
+                        <li ng-class="{active:isLangActive('es')}"><a ng-click="switchLanguage('es')"><i class="famfamfam-flag-es"></i>&nbsp;&nbsp;Español</a>
+                        </li>
+                    </ul>
+                </li>
+                <li ng-class="{active:isActive('/settings')}">
+                    <a ng-click="showSettings()" style="height: 50px;" title="{{ 'SETTINGS' | translate }}">
+                        <span class="fa fa-cogs"></span>
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="minimize()" style="height: 50px;" title="{{ 'MINIMIZE' | translate }}">
+                        <span class="fa fa-minus"></span>
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="toggleFullscreen()" style="height: 50px;" title="{{ 'MAXIMIZE' | translate }}">
+                        <span class="glyphicon glyphicon-fullscreen"></span>
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="showSignOut()" style="height: 50px;" title="{{ 'CLOSE' | translate }}">
+                        <span class="fa fa-sign-out"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</nav>

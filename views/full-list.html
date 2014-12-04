@@ -1,0 +1,19 @@
+<style>
+    ol {
+        column-count: 3;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        padding: 15px 0 0 0;
+    }
+</style>
+
+<div class="container" style="margin-top:50px;">
+    <h1 class="page-header" style="margin:20px 0 0 0;">Animes <small>Full list</small></h1>
+    <div cg-busy="busy">
+        <ol>
+            <li ng-repeat="anime in animes">
+                <a ng-href="#/detail/{{anime.AnimeId}}">{{anime.OriginalName}}</a>
+            </li>
+        </ol>
+    </div>
+</div>

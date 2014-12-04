@@ -1,0 +1,19 @@
+<div class="container" style="margin-top:67px;">
+    <h1 class="page-header" style="margin:20px 0 0 0;">Uploads <small>Latest</small></h1>
+    <div class="row" style="margin-top:20px;" infinite-scroll="loadMore()" infinite-scroll-distance="3">
+        <div ng-repeat="upload in uploads" class="col-xs-4 col-sm-3 col-lg-2 video" style="min-height:200px;">
+            <a ng-click="playEpisode(episode)">
+                <div style="max-height:200px; overflow:hidden;  position:relative">
+                    <div style="width: 100%; height:100%; border-bottom:thin solid black; position: absolute; background: rgba(0, 0, 0, 0.4);">
+                    </div>
+                    <img class="img-responsive" src="http://topanimestream.com/ImageHost/98/12/7/no_video_image.png" ng-hide="upload.Episode.Screenshot" />
+                    <img class="img-responsive" ng-show="upload.Episodes[0].Screenshot" ng-src="{{upload.Episode.Screenshot.formatPosterPath(300)}}" alt="">
+                </div>
+            </a>
+            <h4>
+                    <a  ng-click="playEpisode(episode)" style="text-decoration: none !important;">{{upload.AnimeSource.Anime.OriginalName}}&nbsp;<small>Episode {{upload.Episodes[0].EpisodeNumber}}</small></a>
+                </h4>
+            <p></p>
+        </div>
+    </div>
+</div>

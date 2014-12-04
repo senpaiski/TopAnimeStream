@@ -1,0 +1,33 @@
+<style>
+    .video-js {
+        width: auto !important;
+        height: auto !important;
+        overflow: hidden;
+    }
+    .video-js video {
+        position: relative !important;
+    }
+    .vjs-error-display {
+        color: white;
+        background-color: rgba(36, 36, 36, 0.70);
+    }
+    .modal-body {
+        padding: 0;
+        border-top: thin solid rgb(107, 107, 107);
+        border-bottom: thin solid rgb(107, 107, 107);
+    }
+</style>
+<div class="modal-header">
+    <a class="close" ng-click="cancel()">&times;</a>
+    <h3 class="modal-title">{{anime.OriginalName}} - Episode {{episode.EpisodeNumber}}&nbsp;<small>{{source.Language.Name}} {{source.getSourceType()}}</small></h3> 
+</div>
+<div class="modal-body">
+    <video id="player" class="video-js vjs-default-skin vjs-big-play-centered hide" width="100%" height="100%" style="min-height:350px;" poster="{{episode.Screenshot.formatPosterPath(780)}}" controls preload="auto">
+        <source src="{{mp4}}" type="video/mp4">
+    </video>
+</div>
+<div class="modal-footer hide">
+    <button class="btn btn-default btn-sm pull-left">Previous episode</button>
+    <button class="btn btn-default btn-sm pull-right">Next episode</button>
+    <div class="clearfix"></div>
+</div>

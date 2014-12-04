@@ -1,0 +1,161 @@
+<style>
+    #detail {
+        color: rgb(207, 207, 207);
+    }
+    .page-header {
+        border-bottom: 1px solid #CECECE;
+        color: rgb(78, 78, 78);
+    }
+    .back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: rgb(207, 207, 207);
+    }
+    .layer {
+        background-color: rgba(4, 4, 4, 0.85);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        -webkit-box-shadow: inset 0 -10px 45px -2px rgb(12, 12, 12);
+    }
+    .video {
+        cursor: pointer;
+    }
+    .img-thumbnail {
+        padding: 0;
+        line-height: 1.08;
+        border: 1px solid #222;
+        border-radius: 3px;
+    }
+    .serie {
+        position: relative;
+        border-bottom: thin solid black
+    }
+</style>
+<div id="detail" style="margin-top:50px;">
+    <div ng-class="{'serie row': !anime.IsMovie, 'row': anime.IsMovie}">
+        <div class="back" style="background: url('http://www.topanimestream.com/ImageHost/{{anime.BackdropPath}}') no-repeat center center;-webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;"></div>
+        <div class="layer"></div>
+        <div style="margin-top:20px;" ng-hide="anime.IsMovie" class="hidden-xs ng-hide"></div>
+        <div style="margin-top:50px;" ng-hide="!anime.IsMovie" class="hidden-xs ng-hide"></div>
+        <div class="container" style="padding-bottom:40px;">
+            <div class="col-sm-4 col-md-3">
+                <img ng-src="{{anime.PosterPath.formatPosterPath(300)}}" style="margin-top: 10px;
+box-shadow: 0 5px 30px #000000;" class="img-thumbnail img-responsive hidden-xs" alt="" />
+            </div>
+            <div class="col-sm-8 col-md-9">
+                <div class="btn btn-default pull-right" ng-click="goBack();"><i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Back
+                </div>
+                <h1 style="color:white;">{{anime.OriginalName}}</h1>
+                <ul class="list-inline">
+                    <li ng-if="anime.IsMovie == true">
+                        <i class="fa fa-film"></i>&nbsp;&nbsp;{{ "MOVIE" | translate }}
+                    </li>
+                    <li ng-if="anime.IsMovie == false">
+                        Serie
+                    </li>
+                    <li ng-show="anime.RunningTime">
+                        <ANY translate="MINUTES_TIME" translate-value-time="{{anime.RunningTime}}"></ANY>
+                    </li>
+                    <li ng-show="anime.ReleasedDate">
+                        <ANY translate="RELEASE_DATE" translate-value-date="{{anime.ReleasedDate.substring(0,4)}}"></ANY>
+                    </li>
+                    <li ng-if="anime.IsMovie == false">
+                        <ANY translate="EPISODE_COUNT" translate-value-count="{{anime.EpisodeCount}}"></ANY>
+                    </li>
+                    <li>
+                        <div class="btn-group btn-group-xs" style="margin-top: 5px;">
+                        </div>
+                    </li>
+                </ul>
+                <div ng-if="anime.VoteCount > 0">
+                    <rating ng-model="anime.Rating" max="10" readonly="true"></rating>
+                    <ANY translate="RATING_STARS_VOTECOUNT" translate-value-stars="{{anime.Rating}}" translate-value-votecount="{{anime.VoteCount}}"></ANY>
+                </div>
+                <h3>Synopsis</h3>
+                <p style="line-height: 18px;">
+                    {{anime.getAnimeInformation().getOverview()}}
+                    <div ng-hide="anime.getAnimeInformation()">{{ "NO_DESCRIPTION" | translate }}</div>
+                </p>
+                <ul class="list-inline" style="color: #747474;">
+                    <li ng-repeat="genre in anime.Genres">
+                        {{genre.Name.capitalize()}}
+                    </li>
+                    <li ng-repeat="theme in anime.Themes">
+                        {{theme.Name.capitalize()}}
+                    </li>
+                </ul>
+                <div ng-hide="anime.IsMovie">
+                    <h4>{{ 'AVAILABLE_IN' | translate }}</h4>
+                    <ul class="list-inline">
+                        <li ng-repeat="language in languages"><i class="{{language.getFlag()}}"></i>
+                        </li>
+                    </ul>
+                </div>
+                <div ng-show="anime.IsMovie">
+                    <h3>{{ "WATCH" | translate }}</h3>
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span ng-show="selectedSource">
+                                    <i class="{{selectedSource.getFlag()}}"></i>&nbsp;&nbsp;{{selectedSource.Language.Name}} <strong>{{selectedSource.getSourceType()}}</strong>
+                                </span>
+                                <span ng-hide="selectedSource">Loading...</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="source in sources" ng-click="switchSource(source)" style="padding-left:0"><a style="padding:3px 12px;"><i class="{{source.getFlag()}}"></i>&nbsp;&nbsp;{{source.Language.Name}}&nbsp;<strong>{{source.getSourceType()}}</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <button ng-show="selectedSource" type="button" class="btn btn-success" ng-click="playMovie(selectedSource.Video)">{{ "PLAY" | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="list" ng-hide="anime.IsMovie">
+        <div class="container">
+            <div class="page-header" style="margin:20px 0 0 0;">
+                <h3 class="pull-left">{{ 'EPISODE_LIST' | translate }} <small><ANY translate="AVAILABLE_EPISODE_COUNT" translate-value-count="{{totalAvailableEpisodes}}"></ANY></small>
+                </h3>
+                <div class="btn-group pull-right" style="margin-top:10px;" dropdown>
+                    <a class="btn btn-default"><i class="{{selectedSource.getFlag()}}"></i>&nbsp;&nbsp;{{selectedSource.Language.Name}} <strong>{{selectedSource.getSourceType()}}</strong></a>
+                    <button type="button" class="btn btn-default dropdown-toggle">
+                        <span class="caret"></span>
+                        <span class="sr-only">Split button!</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-click="switchSource(source)" ng-repeat="source in sources"><a><i class="{{source.getFlag()}}"></i>&nbsp;&nbsp;{{source.Language.Name}} <strong>{{source.getSourceType()}}</strong></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="row" cg-busy="busy" infinite-scroll="loadMore()" infinite-scroll-distance="3">
+                <div style="margin-top:20px;">
+                    <div ng-repeat="episode in episodes" class="col-xs-4 col-sm-3 col-lg-2 video grow" style="min-height:200px; max-height:200px; overflow:hidden;">
+                        <a ng-click="playEpisode(episode)">
+                            <div style="max-height:200px; overflow:hidden;  position:relative">
+                                <div class="anime-inner-box" style="width: 100%; height:100%; border-bottom:thin solid black; position: absolute; background: rgba(0, 0, 0, 0.4);">
+                                </div>
+                                <img class="img-responsive" src="http://www.topanimestream.com/ImageHost/98/12/7/no_video_image.png" ng-hide="episode.Screenshot" />
+                                <img class="img-responsive" ng-show="episode.Screenshot" ng-src="{{episode.Screenshot.formatPosterPath(300)}}" alt="">
+                            </div>
+                        </a>
+                        <h4>
+                    <a ng-click="playEpisode(episode)" style="text-decoration: none !important;">{{ "EPISODE" | translate }} {{episode.EpisodeNumber}}&nbsp;<small>{{episode.EpisodeInformations[0].EpisodeName.trimToLength(30)}}</small></a>
+                </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

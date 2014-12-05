@@ -1,9 +1,13 @@
 <div class="modal-header">
-    <h3 class="modal-title">{{ 'UPDATE' | translate }}&nbsp;<small>TopAnimeStream {{newVersion}}</small></h3> 
+    <h3 class="modal-title">{{ 'UPDATE' | translate }}&nbsp;{{newVersion}}&nbsp;<small>TopAnimeStream</small></h3> 
 </div>
 <div class="modal-body">
-    <div>{{status}}</div>
-    <progressbar max="100" ng-show="isDownloading" value="percentage"><span>{{loaded}} / {{max}}</span></progressbar>
+    <div ng-hide="meetsVersionRequirement">
+        <ANY translate="NEW_UPGRADE_AVAILABLE" translate-value-version="{{currentVersion}}"></ANY> <a ng-click="browser.open('http://www.topanimestream.com/en/downloads/')" style="cursor:pointer;">{{ 'DOWNLOAD_PAGE' | translate }}</a>
+    </div>
+    <div ng-show="status" ng-bind-html="status"></div>
+    <progressbar max="100" ng-show="isDownloading" value="percentage" style="margin-top:5px;"><span>{{loaded}} / {{max}}</span>
+    </progressbar>
 </div>
 <div class="modal-footer">
     <button class="btn btn-danger btn-sm pull-right" ng-click="close()">{{ 'CLOSE' | translate }}</button>

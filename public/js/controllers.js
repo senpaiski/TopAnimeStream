@@ -252,13 +252,20 @@ aniApp.controller('PlayerMovieModal', function ($scope, $sce, $modalInstance, an
 
 
 //Login
-aniApp.controller('Login', function ($scope, aniFactory, aniDataFactory, Browser, $location, $modal, $q, $filter) {
+aniApp.controller('Login', function ($scope, updater, aniFactory, aniDataFactory, Browser, $location, $modal, $q, $filter, settings, $translate) {
     $scope.browser = Browser; //This is use to redirect external url page (register & forgot password)
     $scope.username;
     $scope.password;
     $scope.loggingIn = false;
     $scope.loginError;
     $scope.isServiceOnline;
+
+    //Clear cache from disk (do not remove) This avoid caching update manifest file
+    var gui = require('nw.gui');
+    gui.App.clearCache();
+    
+    //Load default user language
+    $translate.use(settings.data.defaultLanguage);
 
     aniDataFactory.checkForInternetConnection(function (online) {
         console.log('Internet access: ' + online);
@@ -311,13 +318,10 @@ aniApp.controller('Login', function ($scope, aniFactory, aniDataFactory, Browser
         });
     }
 
-    //Check for updates only in the login page
-    var pkg = require('./package.json');
-    var updater = require('node-webkit-updater');
-    var upd = new updater(pkg);
-
-    upd.checkNewVersion(function (error, newVersionExists, manifest) {
-        if (!error && newVersionExists) {
+    updater.checkNewVersion().then(function (info) {
+        console.log(info);
+        if (info.newVersionExists) {
+            //Display update modal
             var modalInstance = $modal.open({
                 templateUrl: 'public/partials/updater-modal.html',
                 controller: 'Updater',
@@ -325,6 +329,9 @@ aniApp.controller('Login', function ($scope, aniFactory, aniDataFactory, Browser
                 keyboard: false
             });
         }
+    }, function (error) {
+        console.log(error);
+        //Error while retreiving manifest file
     });
 });
 
@@ -588,110 +595,115 @@ aniApp.controller('Uploads', function ($scope, aniDataFactory) {
 });
 
 //Updater
-aniApp.controller('Updater', function ($scope, $modalInstance, $filter) {
+aniApp.controller('Updater', function ($scope, $modalInstance, $sanitize, $filter, updater, Browser) {
+    //Do not remove $sanitize it's used for ng-bind-html
+    var gui = require('nw.gui');
+    var win = gui.Window.get();
     var pkg = require('./package.json');
-    var updater = require('node-webkit-updater');
-    var upd = new updater(pkg);
-    var copyPath, execPath;
 
+    $scope.browser = Browser;
     $scope.currentVersion = pkg.version;
-    $scope.newVersion = "...";
+    $scope.newVersion;
+    $scope.currentVersion;
     $scope.loaded = 0;
     $scope.percentage = 0;
     $scope.max = 0;
     $scope.status;
     $scope.isDownloading = false;
+    $scope.meetsVersionRequirement = true;
 
-    // Args passed when new app is launched from temp dir during update
-    if (gui.App.argv.length) {
-        copyPath = gui.App.argv[0];
-        execPath = gui.App.argv[1];
+    var downloader;
 
-        // Replace old app, Run updated app from original location and close temp instance
-        upd.install(copyPath, function (err) {
-            if (!err) {
-                upd.run(execPath, null);
-                gui.App.quit();
-            }
-        });
-    } else {
-        //Check the manifest for version
-        $scope.status = $filter('translate')('LOADING_MANIFEST_FILES');
-        upd.checkNewVersion(function (error, newVersionExists, manifest) {
-            $scope.newVersion = manifest.version;
+    updater.checkNewVersion().then(function (info) {
+            if (info.newVersionExists) {
+                $scope.newVersion = info.manifest.latestVersion;
+                $scope.meetsVersionRequirement = info.meetsVersionRequirement;
+                $scope.currentVersion = pkg.version;
 
-            console.log(error);
-            if (!error && newVersionExists) {
+                if (info.meetsVersionRequirement) {
 
-                $scope.$apply(function () {
                     $scope.isDownloading = true;
                     $scope.status = $filter('translate')('DOWNLOADING_APP_DATA');
-                });
 
-                //If the version is different from the running one, download new package to a temp directory.
-                var downloader = upd.download(function (error, filename) {
-                    console.log(error);
-                    if (!error) {
+                    //Start update 
+                    downloader = updater.download(info.manifest, function (error, filename) {
+                        console.log(error);
+                        if (!error) {
+                            $scope.$apply(function () {
+                                $scope.isDownloading = false;
+                                $scope.status = '<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;' + $filter('translate')('UNPACKAGING_APP_DATA');
+                            });
 
-                        $scope.$apply(function () {
-                            $scope.isDownloading = false;
-                            $scope.status = $filter('translate')('UNPACKAGING_APP_DATA');
-                        });
-
-                        console.log(filename);
-                        //Unpack the package in temp.
-                        upd.unpack(filename, function (error, newAppPath) {
-                            if (!error) {
+                            //Unzip
+                            updater.unpack(filename, function (error, path) {
                                 $scope.$apply(function () {
-                                    $scope.status = $filter('translate')('STARTING_INSTALLATION');
+                                    $scope.status = '<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;' + $filter('translate')('COPYING_FILES');
                                 });
 
-                                //Run new app from temp and kill the old one
-                                upd.runInstaller(newAppPath, [upd.getAppPath(), upd.getAppExec()], {});
-                                gui.App.quit();
-                            } else
-                                $scope.cantUpdate();
-                        }, manifest);
-                    } else
-                        $scope.cantUpdate();
-                }, manifest);
-
-                //Get download length
-                downloader.on('response', function (response) {
-                    $scope.max = (downloader['content-length']);
-                });
-
-                downloader.on('data', function (chunk) {
-                    $scope.$apply(function () {
-                        $scope.loaded += chunk.length;
-                        $scope.percentage = ($scope.loaded * 100 / $scope.max);
+                                //Copy new file to the current app folder
+                                updater.patch(path).then(function () {
+                                        win.reloadDev();
+                                    },
+                                    function (error) {
+                                        console.log(error);
+                                    });
+                            });
+                        }
                     });
-                });
-            } else
-                $scope.cantUpdate();
-        });
-    }
 
-    $scope.cantUpdate = function () {
-        $scope.$apply(function () {
-            $scope.status = $filter('translate')('UNABLE_TO_UPDATE');
+                    //Get download length
+                    downloader.on('response', function (response) {
+                        $scope.max = (downloader['content-length']);
+                    });
+
+                    downloader.on('data', function (chunk) {
+                        $scope.$apply(function () {
+                            $scope.loaded += chunk.length;
+                            console.log($scope.loaded);
+                            $scope.percentage = ($scope.loaded * 100 / $scope.max);
+                        });
+                    });
+                }
+            }
+        },
+        function (error) {
+            console.log(error);
         });
-    }
 
     $scope.close = function () {
+        if (downloader)
+            downloader.abort();
+
         $modalInstance.dismiss('cancel');
     };
 });
 
 //Settings
-aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser) {
+aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser, $translate, settings) {
     var pkg = require('./package.json');
+
+    $scope.defaultLanguage = settings.data.defaultLanguage;
+    $scope.useSecureConnection = settings.data.useSecureConnection;
+    $scope.languageMatch = settings.data.languageMatch;
+
     $scope.browser = Browser;
     $scope.appVersion = pkg.version;
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
-    };
+    }
+
+    $scope.saveChanges = function () {
+        settings.data.useSecureConnection = $scope.useSecureConnection;
+        settings.data.languageMatch = $scope.languageMatch;
+
+        settings.save();
+        $scope.cancel();
+    }
+
+    $scope.switchLanguage = function (lang) {
+        settings.switchLanguage(lang);
+    }
 
     $scope.showReleaseNotes = function () {
         var modalInstance = $modal.open({

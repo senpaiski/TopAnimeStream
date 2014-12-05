@@ -49,5 +49,8 @@
     "REFRESH": "Actualiser",
     "RELEASE_NOTES": "Notes de version",
     "GO_BACK": "Retourner",
-    "SAVE_CHANGES": "Enregistrer les modifications"
+    "SAVE_CHANGES": "Enregistrer les modifications",
+    "COPYING_FILES": "Copie des fichiers",
+    "NEW_UPGRADE_AVAILABLE": "Vous utilisez la version {{version}}. Cette version est trop loin derrière et la nouvelle version demande une mise à jour qui change la structure du logiciel. Pour installer cette version vous devez re-télécharger TopAnimeStream à partir de notre site.",
+    "DOWNLOAD_PAGE": "Page de téléchargement"
 }

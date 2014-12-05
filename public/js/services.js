@@ -2,7 +2,7 @@
 
 //AnimeDataService API
 aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCacheFactory) {
-    var baseUrl = 'http://aniblitz.com/AnimeServices/AnimeDataService.svc',
+    var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeDataService.svc',
         //var baseUrl = 'http://localhost:3772/AnimeDataService.svc',
         dataFactory = {};
 
@@ -197,8 +197,8 @@ aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCac
         var deferred = $q.defer(),
             dataCache = DSCacheFactory.get('dataCache');
 
-        var query = baseUrl + '/FastSearch?query=\'' + query + '\'&$format=json&$skip=' + skip + '&$top=' + top;
-
+        var query = baseUrl + '/Search?query=\'' + query + '\'&$format=json';
+        console.log(query);
         if (dataCache.get(query)) {
             console.log('from cache');
             deferred.resolve(dataCache.get(query));
@@ -231,7 +231,7 @@ aniApp.factory('aniFactory', function ($http, $translate, $q) {
     var BasicHttpBinding = require('wcf.js').BasicHttpBinding,
         Proxy = require('wcf.js').Proxy;
 
-    var baseUrl = 'http://aniblitz.com/AnimeServices/AnimeService.svc',
+    var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeService.svc',
         //var baseUrl = 'http://localhost:3772/AnimeService.svc',
         baseInterface = 'http://tempuri.org/IAnimeService',
         envelope = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header><Lang>{0}</Lang></s:Header><s:Body>{1}</s:Body></s:Envelope>',

@@ -20,13 +20,6 @@
             "url": "http://www.topanimestream.com/apps/desktop/linux64/topanimestream_app.tar.gz"
         }
     },
-    "settings": {
-        "apiDataUrl": "http://www.topanimestream.com/AnimeServices/AnimeDataService.svc",
-        "apiUserUrl": "http://www.topanimestream.com/AnimeServices/AnimeService.svc",
-        "useHttps": "false",
-        "languageOnly" : "false",
-        "defaultLanguage": "en"
-    },
     "dependencies": {
         "wcf.js": "^0.0.6",
         "xml2js": "^0.4.4",

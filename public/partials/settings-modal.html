@@ -9,7 +9,7 @@
         <label class="control-label">Anime language match</label>
         <div class="checkbox">
             <label>
-                <input type="checkbox" style="margin-top:0;">Display animes available <strong>only</strong> in my default language.
+                <input type="checkbox" ng-model="languageMatch" style="margin-top:0;">Display animes available <strong>only</strong> in my default language.
             </label>
         </div>
     </div>
@@ -18,25 +18,9 @@
         <label class="control-label">API - Secure connection</label>
         <div class="checkbox">
             <label>
-                <input type="checkbox" style="margin-top:0;">Use secure connection for TopAnimeStream API (<span class="text-success">https</span>)
+                <input type="checkbox" ng-model="useSecureConnection" style="margin-top:0;">Use secure connection for TopAnimeStream API (<span class="text-success">https</span>)
             </label>
         </div>
-    </div>
-    <div class="form-group hide">
-        <hr>
-        <label class="control-label">Account</label>
-        <br>
-        <div>You're not signed in to any accounts. Add a TopAnimeStream account for easy access to your favorite anime videos.</div>
-        <div style="margin-top:5px">
-            <a href="#/login" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add account</a><a ng-click="browser.open('http://www.topanimestream.com/en/register')" class="btn btn-default"><i class="fa fa-user"></i>&nbsp;&nbsp;Register</a>
-        </div>
-
-        <img alt="" src="" height="63" width="63" class="pull-left" />
-        <div class="pull-left" style="margin-left:10px;">
-            <input id="txtUsername" placeholder="Username" class="form-control" type="text">
-            <input id="txtPassword" placeholder="Password" class="form-control" type="password" style="margin-top:5px;">
-        </div>
-        <div class="clearfix"></div>
     </div>
     <hr>
     <div class="form-group">
@@ -59,6 +43,6 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-default btn-sm pull-left" ng-click="cancel()">{{ 'CLOSE' | translate }}</button>
-    <button class="btn btn-success btn-sm pull-right"><i class="fa fa-save"></i>&nbsp;&nbsp;{{ 'SAVE_CHANGES' | translate }}</button>
+    <button class="btn btn-success btn-sm pull-right" ng-click="saveChanges()"><i class="fa fa-save"></i>&nbsp;&nbsp;{{ 'SAVE_CHANGES' | translate }}</button>
     <div class="clearfix"></div>
 </div>

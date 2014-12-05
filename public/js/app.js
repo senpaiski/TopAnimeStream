@@ -1,6 +1,6 @@
 'use strict';
 
-var aniApp = angular.module('aniApp', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'wu.masonry', 'infinite-scroll', 'angular-data.DSCacheFactory', 'pascalprecht.translate', 'cgBusy']);
+var aniApp = angular.module('aniApp', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'wu.masonry', 'infinite-scroll', 'angular-data.DSCacheFactory', 'pascalprecht.translate', 'cgBusy']);
 
 var fs = require('fs');
 var gui = require('nw.gui');
@@ -21,6 +21,7 @@ aniApp.config(function ($translateProvider) {
 
     //Set default language
     $translateProvider.preferredLanguage('en');
+
 });
 
 //Disable file drop over the application

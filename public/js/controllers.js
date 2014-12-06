@@ -1,30 +1,15 @@
 'use script';
-aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $modal) {
-    $scope.isConnected = false;
-    $scope.user;
-    $scope.headerUrl = 'public/partials/header.html';
+aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $modal, Window, GUI, account) {
 
-    //Get userInfo from sessions
-    if (sessionStorage.token)
-        $scope.isConnected = true;
+    //Load default
+    loadUser();
 
-    if (sessionStorage.user)
-        $scope.user = JSON.parse(sessionStorage.user);
+    function loadUser() {
+        $scope.isConnected = account.isConnected();
+        $scope.user = account.getUser();
 
-    $scope.loadUser = function () {
-        if (sessionStorage.token)
-            $scope.isConnected = true;
-
-        if (sessionStorage.username) {
-            //Load user information
-            getUserInfo(sessionStorage.username, function (data) {
-                console.log(data);
-                sessionStorage.user = JSON.stringify(data);
-                //Refresh header            
-                $scope.headerUrl = null;
-                $scope.headerUrl = 'public/partials/header.html';
-            });
-        }
+        $scope.headerUrl = null;
+        $scope.headerUrl = 'public/partials/header.html';
     }
 
     $scope.isLangActive = function (lang) {
@@ -44,20 +29,18 @@ aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $m
         }
     }
 
-    function getUserInfo(username, callback) {
-        aniDataFactory.getUserInfo(username)
-            .success(function (data) {
-                $scope.user = data.value[0];
-                callback($scope.user);
-            })
-            .error(function (error) {
-                console.log(error);
-            });
-    }
+    $scope.$on("userLoggedOut", function (event, args) {
+        account.clear();
+        loadUser();
+    });
+
+    $scope.$on("userLoggedIn", function (event, args) {
+        loadUser();
+    });
 });
 
 //Header - toolbar
-aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Window, aniDataFactory) {
+aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Window, aniDataFactory, account) {
     var pkg = require('./package.json');
     $scope.appVersion = pkg.version;
 
@@ -124,14 +107,21 @@ aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Wi
 });
 
 //Sign out modal
-aniApp.controller('SignOutModal', function ($scope, $modalInstance, Window) {
+aniApp.controller('SignOutModal', function ($rootScope, $scope, $modalInstance, account, Window) {
+
     $scope.ok = function () {
-        Window.close();
-    };
+        if (account.isConnected()) {
+            account.logout().then(function () {
+                Window.close();
+            });
+        } else {
+            Window.close();
+        }
+    }
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
-    };
+    }
 });
 
 //Player episode modal
@@ -252,7 +242,7 @@ aniApp.controller('PlayerMovieModal', function ($scope, $sce, $modalInstance, an
 
 
 //Login
-aniApp.controller('Login', function ($scope, updater, aniFactory, aniDataFactory, Browser, $location, $modal, $q, $filter, settings, $translate) {
+aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, aniDataFactory, Browser, $location, $modal, $q, $filter, settings, $translate, account) {
     $scope.browser = Browser; //This is use to redirect external url page (register & forgot password)
     $scope.username;
     $scope.password;
@@ -263,7 +253,7 @@ aniApp.controller('Login', function ($scope, updater, aniFactory, aniDataFactory
     //Clear cache from disk (do not remove) This avoid caching update manifest file
     var gui = require('nw.gui');
     gui.App.clearCache();
-    
+
     //Load default user language
     $translate.use(settings.data.defaultLanguage);
 
@@ -299,7 +289,16 @@ aniApp.controller('Login', function ($scope, updater, aniFactory, aniDataFactory
         $scope.loginError = '';
         $scope.loggingIn = true;
 
-        aniFactory.login($scope.username, $scope.password).then(function (data) {
+        account.login($scope.username, $scope.password).then(function () {
+
+            $rootScope.$broadcast('userLoggedIn', null);
+            $location.path('/home');
+        }, function (reason) {
+            $scope.loggingIn = false;
+            $scope.loginError = reason;
+            console.log(reason);
+        });
+        /*        aniFactory.login($scope.username, $scope.password).then(function (data) {
             //Login was successful
             //Save user login token in session
             console.log(data);
@@ -315,8 +314,9 @@ aniApp.controller('Login', function ($scope, updater, aniFactory, aniDataFactory
             $scope.loggingIn = false;
             $scope.loginError = reason;
             console.log(reason);
-        });
+        });*/
     }
+
 
     updater.checkNewVersion().then(function (info) {
         console.log(info);

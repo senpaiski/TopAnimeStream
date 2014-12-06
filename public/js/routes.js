@@ -40,10 +40,6 @@ aniApp.config(function ($routeProvider, $compileProvider) {
             templateUrl: 'views/uploads.html',
             controller: 'Uploads'
         })
-        .when('/release-notes', {
-            templateUrl: 'views/release-notes.html',
-            controller: 'ReleaseNotes'
-        })
         .otherwise({
             redirectTo: '/login'
         });

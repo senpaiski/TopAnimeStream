@@ -1,5 +1,91 @@
 'use strict';
 
+aniApp.config(['$httpProvider',
+    function ($httpProvider) {
+        $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
+            return {
+                'request': function (config) {
+                    if (sessionStorage.token) {
+                        config.headers['Authentication'] = sessionStorage.token;
+                    }
+                    return config;
+                },
+                'response': function (response) {
+                    //Will only be called for HTTP up to 300
+                    return response;
+                },
+                'responseError': function (rejection) {
+                    if (rejection.status === 401) {
+                        $rootScope.$broadcast('userLoggedOut', null);
+                        $location.path("/login");
+                    }
+                    return $q.reject(rejection);
+                }
+            };
+        });
+}]);
+
+aniApp.factory('account', function ($q, aniFactory, aniDataFactory) {
+    var account = {};
+
+    account.login = function (username, password) {
+        var deferred = $q.defer();
+        aniFactory.login(username, password).then(function (token) {
+            sessionStorage.token = token;
+            sessionStorage.username = username;
+
+            aniDataFactory.getUserInfo(username)
+                .success(function (data) {
+                    sessionStorage.user = JSON.stringify(data.value[0]);
+                    console.log(sessionStorage.user);
+                    deferred.resolve();
+                })
+                .error(function (error) {
+                    deferred.reject(error);
+                });
+
+        }, function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    }
+
+    account.logout = function () {
+        return aniFactory.logout().then(function () {
+            account.clear();
+        })
+    }
+
+    account.clear = function () {
+        sessionStorage.clear();
+    }
+
+    account.getToken = function () {
+        return sessionStorage.token;
+    }
+
+    account.getUsername = function () {
+        return sessionStorage.username;
+    }
+
+    account.getUser = function () {
+        if (sessionStorage.user) {
+            return JSON.parse(sessionStorage.user);
+        } else
+            return null;
+    }
+
+    account.isConnected = function () {
+        if (sessionStorage.token)
+            return true;
+
+        return false;
+    }
+
+    return account;
+});
+
 //AnimeDataService API
 aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCacheFactory) {
     var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeDataService.svc',
@@ -13,7 +99,6 @@ aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCac
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'memory' // [default: memory] sessionStorage, localStorage
     });
-
 
     dataFactory.checkForInternetConnection = function (callback) {
         $http.get('http://www.google.com/').success(function (data) {
@@ -35,9 +120,9 @@ aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCac
             });
     }
 
-    dataFactory.setToken = function (token) {
+    /*    dataFactory.setToken = function (token) {
         $http.defaults.headers.common.Authentication = token;
-    }
+    }*/
 
     dataFactory.getMP4 = function (embed) {
         //Get provider name with embed domain link
@@ -289,13 +374,16 @@ aniApp.factory('aniFactory', function ($http, $translate, $q) {
 
     //LogOut
     wcfFactory.logout = function () {
+        var deferred = $q.defer();
         var tag = 'LogOut';
         var message = '<LogOut xmlns="http://tempuri.org/"><token>' + sessionStorage.token + '</token></LogOut>';
 
         //Send logOut
         proxy.send(envelope.format($translate.use(), message), baseInterface + '/' + tag, function (response, context) {
-            console.log(response);
+            deferred.resolve();
         });
+
+        return deferred.promise;
     }
 
     //Check if service is available

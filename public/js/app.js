@@ -21,7 +21,6 @@ aniApp.config(function ($translateProvider) {
 
     //Set default language
     $translateProvider.preferredLanguage('en');
-
 });
 
 //Disable file drop over the application
@@ -42,15 +41,15 @@ window.addEventListener("dragstart", function (e) {
     e.preventDefault();
 }, false);
 
-////Angular busy (for loading)
+//Angular busy (for loading)
 aniApp.value('cgBusyDefaults', {
     message: 'Loading',
     backdrop: false
 });
 
-/*process.on('uncaughtException', function (error) {
+process.on('uncaughtException', function (error) {
     console.log(error);
-});*/
+});
 
 //Check if user is not already logged in
 //Is token empty?

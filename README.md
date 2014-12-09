@@ -13,9 +13,8 @@ TopAnimeStream App is currently in `beta`
 5. Enjoy
  
 ##Screenshots
-![TopAnimeStream App movie list](http://www.topanimestream.com/ImageHost/16/38/8/topanimestream_app_movie_list.jpg)
-![TopAnimeStream App detail page](http://www.topanimestream.com/ImageHost/17/38/8/topanimestream_app_detail_page.jpg)
-![TopAnimeStream App watch episode](http://www.topanimestream.com/ImageHost/18/38/8/topanimestream_app_watch_episode.jpg)
+![TopAnimeStream App detail page](http://www.topanimestream.com/ImageHost/56/39/8/desktop_app_topanimestream_detail_page.jpg)
+![TopAnimeStream App watch episode](http://www.topanimestream.com/ImageHost/55/39/8/desktop_app_topanimestream_player.jpg)
 
 ##Libraries
 - Node-webkit (App runtime based on Chromium and node.js)

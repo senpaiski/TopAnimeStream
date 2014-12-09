@@ -1,9 +1,5 @@
 'use script';
 aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $modal, Window, GUI, account) {
-
-    //Load default
-    loadUser();
-
     function loadUser() {
         $scope.isConnected = account.isConnected();
         $scope.user = account.getUser();
@@ -11,6 +7,9 @@ aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $m
         $scope.headerUrl = null;
         $scope.headerUrl = 'public/partials/header.html';
     }
+
+    //Load default
+    loadUser();
 
     $scope.isLangActive = function (lang) {
         return lang === $translate.use();
@@ -84,7 +83,7 @@ aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Wi
     }
 
     $scope.search = function () {
-        if ($scope.searchValue.length == 0) {
+        if ($scope.searchValue.length === 0) {
             $scope.animeSearch = [];
             return;
         }
@@ -129,10 +128,7 @@ aniApp.controller('PlayerEpisodeModal', function ($scope, $sce, $modalInstance, 
     $scope.episode = episode;
     $scope.anime = anime;
     $scope.source = source;
-    $scope.mp4;
-
-    //Get mp4 of embed link
-    getVideoMP4();
+    $scope.mp4 = "";
 
     var video;
 
@@ -177,13 +173,20 @@ aniApp.controller('PlayerEpisodeModal', function ($scope, $sce, $modalInstance, 
 
 
                 //If video js is ready than play the video
-                video.ready();
+                video.ready(function () {
+                    video.play();
+                });
+
+
 
                 //Show video
                 $("#player").removeClass("hide");
             }, 1000);
         });
     }
+
+    //Get mp4 of embed link
+    getVideoMP4();
 
     $scope.cancel = function () {
         if ((video !== undefined) && (video !== null)) {
@@ -253,6 +256,7 @@ aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, an
     //Clear cache from disk (do not remove) This avoid caching update manifest file
     var gui = require('nw.gui');
     gui.App.clearCache();
+    gui.Window.get().showDevTools();
 
     //Load default user language
     $translate.use(settings.data.defaultLanguage);
@@ -298,23 +302,6 @@ aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, an
             $scope.loginError = reason;
             console.log(reason);
         });
-        /*        aniFactory.login($scope.username, $scope.password).then(function (data) {
-            //Login was successful
-            //Save user login token in session
-            console.log(data);
-            sessionStorage.token = data;
-            sessionStorage.username = $scope.username;
-            aniDataFactory.setToken(sessionStorage.token);
-            $scope.loadUser();
-
-            //Redirect the user to default page
-            $location.path('/home');
-            console.log(data);
-        }, function (reason) {
-            $scope.loggingIn = false;
-            $scope.loginError = reason;
-            console.log(reason);
-        });*/
     }
 
 

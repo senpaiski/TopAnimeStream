@@ -13,6 +13,7 @@ aniApp.factory('settings', function ($translate) {
         settings.data = JSON.parse(fs.readFileSync(path));
     } else {
         fs.writeFileSync(path, JSON.stringify(settings.defaults, null, "\t"));
+        settings.data = settings.defaults;
     }
     
     settings.switchLanguage = function (lang) {

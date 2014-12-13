@@ -174,14 +174,8 @@ aniApp.controller('PlayerEpisodeModal', function ($scope, $sce, $modalInstance, 
                     "techOrder": ["flash", "html5"]
                 });
 
-
-
                 //If video js is ready than play the video
-                video.ready(function () {
-                    video.play();
-                });
-
-
+                video.ready();
 
                 //Show video
                 $("#player").removeClass("hide");
@@ -376,6 +370,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
         $scope.boolBusy = true;
         $scope.busy = aniDataFactory.getAvailableEpisodes(animeSourceId, skip, top)
             .then(function (data) {
+                
                 $scope.totalAvailableEpisodes = data["odata.count"];
 
                 for (var i = 0; i < data.value.length; i++) {
@@ -389,7 +384,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
     $scope.loadMore = function () {
         //Get available episodes
         if (!$scope.anime.IsMovie && !$scope.boolBusy) {
-            if ($scope.skip < 1000) {
+            if ($scope.skip < $scope.anime.EpisodeCount) {
                 console.log("Load more");
                 getAvailableEpisodes($scope.selectedSource.AnimeSourceId, $scope.skip, 50);
                 $scope.skip += 50;

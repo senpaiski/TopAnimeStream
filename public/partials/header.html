@@ -31,7 +31,8 @@
         </div>
         <ul ng-hide="!isConnected" class="nav navbar-nav ng-hide">
             <li>
-                <img alt="" ng-src="{{user.ProfilePic.formatPosterPath(154)}}" style="max-height:50px;">
+                <img alt="" ng-show="user.ProfilePic" ng-src="{{user.ProfilePic.formatPosterPath(154)}}" style="max-height:50px;">
+                <img alt="" ng-hide="user.ProfilePic" src="/public/img/default_profile.jpg" style="max-height:50px;">
             </li>
             <li class="dropdown open">
                 <a ng-href="/en/profile/{{user.Username}}/" class="dropdown-toggle" style="background-color: #1c3e50; color: #fff; height:50px;">{{user.Username}} <span class="caret"></span></a>
@@ -64,7 +65,8 @@
                 </div>
                 <!-- Search results div -->
                 <div ng-show="animeSearch.length" style="position:absolute; min-width: 250px;margin-top: 10px; z-index: 9999999; border-top-left-radius: 0;border-top-right-radius: 0;" class="panel panel-default">
-                    <div class="panel-heading"><ANY translate="RESULT_COUNT" translate-value-count="{{animeSearch.length}}"></ANY>
+                    <div class="panel-heading">
+                        <ANY translate="RESULT_COUNT" translate-value-count="{{animeSearch.length}}"></ANY>
                         <i class="fa fa-close pull-right" style="color:#ABABAB; cursor:pointer;" ng-click="reset()"></i>
                         <div class="clearfix"></div>
                     </div>

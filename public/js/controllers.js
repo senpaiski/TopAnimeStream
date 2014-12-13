@@ -222,7 +222,7 @@ aniApp.controller('PlayerMovieModal', function ($scope, $sce, $modalInstance, an
                     "controls": true,
                     "autoplay": false,
                     "preload": "auto",
-                    "techOrder": ["html5", "flash"]
+                    "techOrder": ["flash", "html5"]
                 });
 
                 //If video js is ready than play the video
@@ -257,7 +257,7 @@ aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, an
     //Clear cache from disk (do not remove) This avoid caching update manifest file
     var gui = require('nw.gui');
     gui.App.clearCache();
-    
+
     //Load default user language
     $translate.use(settings.data.defaultLanguage);
 
@@ -346,6 +346,8 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
     $scope.sources = [];
     $scope.languages = [];
     $scope.selectedSource = {};
+    $scope.skip = 0;
+    $scope.boolBusy = false;
 
     $scope.goBack = function () {
         history.back();
@@ -371,18 +373,29 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
     getAvailableSource($routeParams.animeId);
 
     function getAvailableEpisodes(animeSourceId, skip, top) {
+        $scope.boolBusy = true;
         $scope.busy = aniDataFactory.getAvailableEpisodes(animeSourceId, skip, top)
             .then(function (data) {
                 $scope.totalAvailableEpisodes = data["odata.count"];
-                $scope.episodes = data.value;
+
+                for (var i = 0; i < data.value.length; i++) {
+                    $scope.episodes.push(data.value[i]);
+                }
+
+                $scope.boolBusy = false;
             });
     }
 
     $scope.loadMore = function () {
-        console.log("Load more");
         //Get available episodes
-        if (!$scope.anime.IsMovie)
-            getAvailableEpisodes($scope.selectedSource.AnimeSourceId, 0, 50);
+        if (!$scope.anime.IsMovie && !$scope.boolBusy) {
+            if ($scope.skip < 1000) {
+                console.log("Load more");
+                getAvailableEpisodes($scope.selectedSource.AnimeSourceId, $scope.skip, 50);
+                $scope.skip += 50;
+                console.log($scope.skip);
+            }
+        }
     }
 
     function getAvailableSource(animeId) {

@@ -238,7 +238,7 @@ aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCac
         var deferred = $q.defer(),
             dataCache = DSCacheFactory.get('dataCache');
 
-        var query = baseUrl + '/Episodes()?$format=json&$filter=Mirrors/any(m:m/AnimeSource/AnimeSourceId%20eq%20' + animeSourceId + ')&$expand=Mirrors/AnimeSource/Language,EpisodeInformations,Mirrors/Provider&$orderby=Order&$inlinecount=allpages';
+        var query = baseUrl + '/Episodes()?$format=json&$filter=Mirrors/any(m:m/AnimeSource/AnimeSourceId%20eq%20' + animeSourceId + ')&$expand=Mirrors/AnimeSource/Language,EpisodeInformations,Mirrors/Provider&$orderby=Order&$inlinecount=allpages&$skip=' + skip + '&$top=' + top;
 
         if (dataCache.get(query)) {
             console.log('from cache');

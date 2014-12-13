@@ -1,5 +1,9 @@
 'use script';
 aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $modal, Window, GUI, account) {
+
+    //Load default
+    loadUser();
+
     function loadUser() {
         $scope.isConnected = account.isConnected();
         $scope.user = account.getUser();
@@ -7,9 +11,6 @@ aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $m
         $scope.headerUrl = null;
         $scope.headerUrl = 'public/partials/header.html';
     }
-
-    //Load default
-    loadUser();
 
     $scope.isLangActive = function (lang) {
         return lang === $translate.use();
@@ -83,7 +84,7 @@ aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Wi
     }
 
     $scope.search = function () {
-        if ($scope.searchValue.length === 0) {
+        if ($scope.searchValue.length == 0) {
             $scope.animeSearch = [];
             return;
         }
@@ -128,7 +129,10 @@ aniApp.controller('PlayerEpisodeModal', function ($scope, $sce, $modalInstance, 
     $scope.episode = episode;
     $scope.anime = anime;
     $scope.source = source;
-    $scope.mp4 = "";
+    $scope.mp4;
+
+    //Get mp4 of embed link
+    getVideoMP4();
 
     var video;
 
@@ -185,9 +189,6 @@ aniApp.controller('PlayerEpisodeModal', function ($scope, $sce, $modalInstance, 
         });
     }
 
-    //Get mp4 of embed link
-    getVideoMP4();
-
     $scope.cancel = function () {
         if ((video !== undefined) && (video !== null)) {
             video.pause();
@@ -221,7 +222,7 @@ aniApp.controller('PlayerMovieModal', function ($scope, $sce, $modalInstance, an
                     "controls": true,
                     "autoplay": false,
                     "preload": "auto",
-                    "techOrder": ["flash", "html5"]
+                    "techOrder": ["html5", "flash"]
                 });
 
                 //If video js is ready than play the video
@@ -256,8 +257,7 @@ aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, an
     //Clear cache from disk (do not remove) This avoid caching update manifest file
     var gui = require('nw.gui');
     gui.App.clearCache();
-    gui.Window.get().showDevTools();
-
+    
     //Load default user language
     $translate.use(settings.data.defaultLanguage);
 
@@ -707,4 +707,47 @@ aniApp.controller("ReleaseNotes", function ($scope, $modalInstance) {
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
+});
+
+aniApp.controller("Test", function ($scope) {
+
+    //Load videojs
+    videohtml = videojs("player-html5", {
+        "controls": true,
+        "autoplay": false,
+        "preload": "auto",
+        "techOrder": ["html5"]
+    });
+
+    $(window).bind('beforeunload', function () {
+        console.log('BeforeOnload called!');
+        videohtml.stop();
+    });
+
+    window.onbeforeunload = function () {
+        console.log('OnBeforeOnload called!');
+        videohtml.stop();
+    }
+
+    videoflash = videojs("player-flash", {
+        "controls": true,
+        "autoplay": false,
+        "preload": "auto",
+        "techOrder": ["flash"]
+    });
+
+    videohtml.ready(function () {
+        videohtml.play();
+    });
+
+    videoflash.ready(function () {
+        videoflash.play();
+    });
+
+    jwplayer("jwplayer-flash").setup({
+        file: "http://av3.uploadcrazy.net/dl/clannad-after01.mp4?st=pWZRZhLkADdz3CXWpzCkng&e=1418256147",
+        image: "",
+        primary: "flash"
+    });
+
 });

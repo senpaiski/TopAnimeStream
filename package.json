@@ -36,7 +36,7 @@
   },
   "window": {
     "title": "TopAnimeStream",
-    "toolbar": true,
+    "toolbar": false,
     "show": true,
     "frame": false,
     "position": "center",

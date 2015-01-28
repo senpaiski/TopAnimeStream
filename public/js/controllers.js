@@ -1,4 +1,4 @@
-'use script';
+'use strict';
 aniApp.controller('App', function ($scope, aniDataFactory, $translate, $http, $modal, Window, GUI, account) {
 
     //Load default
@@ -58,7 +58,7 @@ aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Wi
 
     $scope.isActive = function (route) {
         return route === $location.url();
-    }
+    };
 
     $scope.showSignOut = function () {
         $modal.open({
@@ -76,25 +76,25 @@ aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Wi
             .then(function (data) {
                 console.log(data.value);
                 $scope.animeSearch = data.value;
-            })
+            });
     }
 
     $scope.reset = function () {
         $scope.animeSearch = [];
-    }
+    };
 
     $scope.search = function () {
-        if ($scope.searchValue.length == 0) {
+        if ($scope.searchValue.length === 0) {
             $scope.animeSearch = [];
             return;
         }
 
         searchAnimes($scope.searchValue, 0, 50);
-    }
+    };
 
     $scope.switchLanguage = function (lang) {
         $translate.use(lang);
-    }
+    };
 
     $scope.showSettings = function () {
         var modalInstance = $modal.open({
@@ -103,7 +103,7 @@ aniApp.controller('Toolbar', function ($scope, $modal, $translate, $location, Wi
             backdrop: 'static',
             keyboard: false
         });
-    }
+    };
 });
 
 //Sign out modal
@@ -117,11 +117,11 @@ aniApp.controller('SignOutModal', function ($rootScope, $scope, $modalInstance, 
         } else {
             Window.close();
         }
-    }
+    };
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
-    }
+    };
 });
 
 //Player episode modal
@@ -184,7 +184,7 @@ aniApp.controller('PlayerEpisodeModal', function ($scope, $sce, $modalInstance, 
     }
 
     $scope.cancel = function () {
-        if ((video !== undefined) && (video !== null)) {
+        if (video !== undefined && video !== null) {
             video.pause();
             video.dispose();
         }
@@ -229,7 +229,7 @@ aniApp.controller('PlayerMovieModal', function ($scope, $sce, $modalInstance, an
     }
 
     $scope.cancel = function () {
-        if ((video !== undefined) && (video !== null)) {
+        if (video !== undefined && video !== null) {
             video.pause();
             video.dispose();
         }
@@ -296,7 +296,7 @@ aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, an
             $scope.loginError = reason;
             console.log(reason);
         });
-    }
+    };
 
 
     updater.checkNewVersion().then(function (info) {
@@ -345,7 +345,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
 
     $scope.goBack = function () {
         history.back();
-    }
+    };
 
     $scope.anime.getAnimeInformation = function () {
         for (var i = 0; i < this.AnimeInformations.length; i++) {
@@ -362,7 +362,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                 return animeInformation;
             }
         }
-    }
+    };
 
     getAvailableSource($routeParams.animeId);
 
@@ -391,7 +391,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                 console.log($scope.skip);
             }
         }
-    }
+    };
 
     function getAvailableSource(animeId) {
         $scope.busy = aniDataFactory.getAnimeSources(animeId)
@@ -422,7 +422,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                             return "subbed";
 
                         return "dubbed";
-                    }
+                    };
 
                     obj.getFlag = function () {
                         switch (this.Language.ISO639) {
@@ -435,7 +435,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                         }
 
                         return "";
-                    }
+                    };
 
                     var canAdd = true;
                     $.each($scope.languages, function (a, o) {
@@ -460,7 +460,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
 
         if (!$scope.anime.IsMovie)
             getAvailableEpisodes($scope.selectedSource.AnimeSourceId, 0, 50);
-    }
+    };
 
     $scope.playEpisode = function (episode) {
         var modalInstance = $modal.open({
@@ -686,7 +686,7 @@ aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser,
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
-    }
+    };
 
     $scope.saveChanges = function () {
         settings.data.useSecureConnection = $scope.useSecureConnection;
@@ -694,11 +694,11 @@ aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser,
 
         settings.save();
         $scope.cancel();
-    }
+    };
 
     $scope.switchLanguage = function (lang) {
         settings.switchLanguage(lang);
-    }
+    };
 
     $scope.showReleaseNotes = function () {
         var modalInstance = $modal.open({
@@ -707,7 +707,7 @@ aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser,
             backdrop: 'static',
             keyboard: false
         });
-    }
+    };
 });
 
 //ReleaseNotes
@@ -735,7 +735,7 @@ aniApp.controller("Test", function ($scope) {
     window.onbeforeunload = function () {
         console.log('OnBeforeOnload called!');
         videohtml.stop();
-    }
+    };
 
     videoflash = videojs("player-flash", {
         "controls": true,

@@ -1,0 +1,77 @@
+<style>
+    .img-profile {
+        max-height: 50px;
+        border-radius: 4px;
+        margin-top: 12px;
+        margin-left: 10px;
+    }
+    .friend-list {
+        overflow: overlay;
+        position: absolute;
+        top: 75px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    .friend-list li {
+        padding: 15px 15px 15px 20px;
+        border-bottom: thin solid rgba(0, 0, 0, 0.19);
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+    .friend-list li:hover {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.14);
+    }
+</style>
+<div style="width: 100%;
+height: 75px;
+background-color: rgba(0, 0, 0, 0.21);
+border-bottom: thin solid rgba(0, 0, 0, 0.22); position:fixed; top:0; left:0; right:0;" class="toolbar">
+    <div class="pull-left">
+        <img alt="" class="img-profile" ng-show="user.ProfilePic" ng-src="http://www.topanimestream.com/ImageHost/72/37/8/w92_jaski_profile_pic.jpg">
+        <!--<img alt="" ng-show="user.ProfilePic" ng-src="{{user.ProfilePic.formatPosterPath(92)}}">-->
+        <img alt="" class="img-profile" ng-hide="user.ProfilePic" src="/public/img/default_profile.jpg">
+    </div>
+    <div style="padding-left:85px;">
+        <h4 style="color:#d3d3d3">japoilski</h4>
+        <div style="color:#6C9254;">Online</div>
+    </div>
+    <div style="position:fixed; top:0; right:0; padding:10px 5px;">
+        <ul class="list-unstyled list-inline">
+            <li>
+                <a ng-click="minimize();" style="color:#bebebe; cursor:pointer;" title="{{ 'MINIMIZE' | translate }}">
+                    <i class="fa fa-minus"></i>
+                </a>
+            </li>
+            <li>
+                <a ng-click="hide();" style="color:#bebebe; cursor:pointer;" title="{{ 'CLOSE' | translate }}">
+                    <i class="fa fa-times"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="friend-list">
+    <div style="margin:10px; color:#a8a8a8; display:none;">You don't have any friends :(</div>
+    <ul class="list-unstyled">
+        <li ng-repeat="friend in chatInfo.friends">
+            <div class="hvr-grow">
+                <img style="max-height: 35px;
+        border-radius: 4px;" ng-show="friend.thumbnail != ''" src="http://www.topanimestream.com/ImageHost/{{friend.thumbnail}}" class="pull-left" />
+                <img style="max-height: 35px;
+        border-radius: 4px;" ng-show="friend.thumbnail == ''" src="/public/img/default_profile.jpg" class="pull-left" />
+                <div style="padding-left:50px;">
+                    <div style="color:#d3d3d3">{{friend.username}}</div>
+                    <div ng-show="friend.isOnline" style="color:#888888; margin-top:3px;">
+                        Online
+                    </div>
+                    <div ng-show="!friend.isOnline" style="color:#888888; margin-top:3px;">
+                        Offline for
+                        <span am-time-ago="friend.lastActivityDate"></span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </li>
+    </ul>
+</div>

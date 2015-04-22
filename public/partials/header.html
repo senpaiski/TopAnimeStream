@@ -2,7 +2,7 @@
     .navbar-nav a {
         cursor: pointer;
     }
-    .dropdown-menu a {
+    /*  .dropdown-menu a {
         cursor: pointer;
     }
     .navbar-default .navbar-nav>li>a {
@@ -10,8 +10,7 @@
         height: 48px;
     }
     .navbar-nav > li {
-        float: left;
-        display: inline-block;
+  
     }
     .list-group-item {
         cursor: pointer;
@@ -22,73 +21,119 @@
     .list-group-item a:hover {
         text-decoration: none;
     }
+    */
+    #right-list {
+        margin-right: 10px;
+        font-size: 12px;
+    }
+    #left-list a {
+        padding: 16px 15px;
+    }
+    .navbar-nav > li > a {
+        padding: 16px 7px;
+        height: 48px;
+    }
+    .img-profile {
+        max-height: 25px;
+        border-radius: 4px;
+        margin-top: 12px;
+    }
+    textarea:hover,
+    input:hover,
+    textarea:active,
+    input:active,
+    textarea:focus,
+    input:focus,
+    button:focus,
+    button:active,
+    button:hover {
+        outline: 0px !important;
+        -webkit-appearance: none !important;
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+    }
+    .panel-heading {
+        color: #E2E2E2;
+        background-color: #06131F;
+        border-color: #040A0E;
+    }
+    #search-list li {
+        background-color: transparent;
+        border: none;
+    }
+    #search-list li a {
+        color: #F0F0F0;
+        text-decoration: none;
+    }
+    #search-list li:hover {
+        background-color: rgba(0, 0, 0, 0.17);
+    }
+    .slide-box {
+        position: absolute;
+        overflow: auto;
+        width: 250px;
+        z-index: 1000;
+        bottom: -14px;
+        top: 49px;
+        left: 1px;
+        border: thin solid rgb(12, 18, 26);
+        border-bottom: none;
+        border-left: none;
+        box-shadow: rgba(0, 0, 0, 0.17) 5px 0px 1px 0px;
+        background-color: rgba(18, 32, 44, 0.97) !important;
+        -webkit-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        -moz-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        -ms-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        -o-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    }
+    .slide-box.ng-hide {
+        left: -251px;
+    }
+    @media(min-width:992px) {
+        #search-bar {
+            width: 300px;
+        }
+    }
 </style>
-<nav class="navbar navbar-default navbar-fixed-top toolbar" ng-controller="Toolbar">
-    <div class="container-fluid">
+<div ng-controller="Toolbar">
+    <nav class="navbar navbar-default navbar-fixed-top toolbar" style="box-shadow: rgba(0, 0, 0, 0.168627) 0px 4px 3px 0px;">
         <div ng-hide="isConnected" class="navbar-header pull-left">
-            <div class="navbar-brand">TopAnimeStream App <small>{{ 'BETA' | translate }}  {{appVersion}}</small>
+            <div class="navbar-brand">TOPANIMESTREAM
+                <small style="font-weight: normal;">{{ 'BETA' | translate }}  {{appVersion}}</small>
             </div>
         </div>
-        <ul ng-hide="!isConnected" class="nav navbar-nav ng-hide">
-            <li>
-                <img alt="" ng-show="user.ProfilePic" ng-src="{{user.ProfilePic.formatPosterPath(154)}}" style="max-height:50px;">
-                <img alt="" ng-hide="user.ProfilePic" src="/public/img/default_profile.jpg" style="max-height:50px;">
+
+        <ul ng-hide="!isConnected" id="left-list" class="nav navbar-nav ng-hide">
+            <li ng-class="{active:isActive('/home')}"><a href="#/home"><span class="fa fa-home"></span>&nbsp;&nbsp;{{ 'HOME' | translate }}</a>
             </li>
-            <li class="dropdown open">
-                <a ng-href="/en/profile/{{user.Username}}/" class="dropdown-toggle" style="background-color: #1c3e50; color: #fff; height:50px;">{{user.Username}} <span class="caret"></span></a>
-                <ul class="dropdown-menu" style="margin-left:-67px; min-width:161px;" role="menu">
-                    <li ng-class="{active:isActive('/home')}"><a href="#/home"><span class="fa fa-home"></span>&nbsp;&nbsp;{{ 'HOME' | translate }}</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li ng-class="{active:isActive('/list?type=movie')}"><a href="#/list?type=movie"><span class="fa fa-film"></span>&nbsp;&nbsp;{{ 'MOVIES' | translate }}</a>
-                    </li>
-                    <li ng-class="{active:isActive('/list?type=serie')}"><a href="#/list?type=serie"><span class="fa fa-desktop"></span>&nbsp;&nbsp;{{ 'SERIES' | translate }}</a>
-                    </li>
-                    <li ng-class="{active:isActive('/full-list')}"><a href="#/full-list"><span class="fa fa-bars"></span>&nbsp;&nbsp;{{ 'ANIME_LIST' | translate }}</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li ng-class="{active:isActive('/settings')}"><a ng-click="showSettings()"><span class="fa fa-cog"></span>&nbsp;&nbsp;{{ 'SETTINGS' | translate }}</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a ng-click="showSignOut()"><span class="fa fa-sign-out"></span>&nbsp;&nbsp;{{ 'CLOSE' | translate }}</a>
-                    </li>
-                </ul>
+            <li ng-class="{active:isActive('/list?type=movie')}"><a href="#/list?type=movie"><span class="fa fa-film"></span>&nbsp;&nbsp;{{ 'MOVIES' | translate }}</a>
+            </li>
+            <li ng-class="{active:isActive('/list?type=serie')}"><a href="#/list?type=serie"><span class="fa fa-desktop"></span>&nbsp;&nbsp;{{ 'SERIES' | translate }}</a>
+            </li>
+            <li ng-class="{active:isActive('/my-list')}"><a href="#/my-list"><span class="fa fa-bars"></span>&nbsp;&nbsp;{{ 'MY_LIST' | translate }}</a>
             </li>
             <li class="hidden-xs navbar-form" style="position:relative;">
-                <div class="input-group" style="min-width: 257px;">
-                    <input type="text" class="form-control" ng-change="search()" ng-model="searchValue" placeholder="{{ 'SEARCH' | translate }}">
+                <div id="search-bar" class="input-group" style="max-width: 200px;">
+                    <input type="text" class="form-control" style="max-height:25px; background-color:#214a60; color:white;        outline: none !important; border:thin solid #16384b;  border-right:none; font-size:11px;" ng-change="search()" ng-model="searchValue">
                     <div class="input-group-btn">
-                        <a class="btn btn-default" style="color: #245169;" ng-click="search()"><i class="fa fa-search"></i>
+                        <a class="btn btn-default" style="color:#dedede; background-color:#214a60; padding:4px 8px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border:thin solid #16384b; border-left:none;  max-height:25px; transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;" ng-click="search()"><i class="fa fa-search" style="-webkit-transform: scaleX(-1); font-size:13px;"></i>
                         </a>
                     </div>
-                </div>
-                <!-- Search results div -->
-                <div ng-show="animeSearch.length" style="position:absolute; min-width: 250px;margin-top: 10px; z-index: 9999999; border-top-left-radius: 0;border-top-right-radius: 0;" class="panel panel-default">
-                    <div class="panel-heading">
-                        <ANY translate="RESULT_COUNT" translate-value-count="{{animeSearch.length}}"></ANY>
-                        <i class="fa fa-close pull-right" style="color:#ABABAB; cursor:pointer;" ng-click="reset()"></i>
-                        <div class="clearfix"></div>
-                    </div>
-                    <ul class="list-unstyled list-group" style="max-height:500px; overflow:auto;">
-                        <li class="list-group-item" ng-repeat="anime in animeSearch" style="padding:10px;">
-                            <a ng-href="#/detail/{{anime.AnimeId}}" ng-click="reset()">
-                                <img class="media-object pull-left img-responsive img-thumbnail" ng-src="{{anime.PosterPath.formatPosterPath(300)}}" style="max-height:55px;">
-                                <div class="media-body" style="padding-left:10px;">
-                                    <h5 class="media-heading">{{anime.OriginalName}}</h5>
-                                    <small class="text-muted" ng-hide="anime.IsMovie"><ANY translate="EPISODE_COUNT" translate-value-count="{{anime.EpisodeCount}}"></ANY></small>
-                                    <small class="text-muted" ng-show="anime.IsMovie"><ANY translate="MINUTES_TIME" translate-value-time="{{anime.RunningTime}}"></ANY></small>
-                                </div>
-                                <div class="clearfix"></div>
-                            </a>
-                        </li>
-                    </ul>
                 </div>
             </li>
         </ul>
         <div class="navbar-right pull-right">
             <ul id="right-list" class="nav navbar-nav">
-                <li class="dropdown">
+                <li ng-hide="!isConnected">
+                    <img alt="" class="img-profile" ng-show="user.ProfilePic" ng-src="http://www.topanimestream.com/ImageHost/72/37/8/w92_jaski_profile_pic.jpg">
+                    <!--<img alt="" ng-show="user.ProfilePic" ng-src="{{user.ProfilePic.formatPosterPath(154)}}" style="max-height:50px;">-->
+                    <img alt="" class="img-profile" ng-hide="user.ProfilePic" src="/public/img/default_profile.jpg">
+                </li>
+                <li ng-hide="!isConnected"><a ng-click="openFriendList();" class="dropdown-toggle">{{user.Username}}</a>
+                </li>
+                <!--        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" style="height: 50px;"> <span class="fa fa-language" title="{{ 'CHANGE_LANGUAGE' | translate }}"></span>
                     </a>
                     <ul class="dropdown-menu" 14 role="menu" style="min-width:100px;">
@@ -99,29 +144,49 @@
                         <li ng-class="{active:isLangActive('es')}"><a ng-click="switchLanguage('es')"><i class="famfamfam-flag-es"></i>&nbsp;&nbsp;Español</a>
                         </li>
                     </ul>
-                </li>
+                </li>-->
                 <li ng-class="{active:isActive('/settings')}">
-                    <a ng-click="showSettings()" style="height: 50px;" title="{{ 'SETTINGS' | translate }}">
+                    <a ng-click="showSettings()" title="{{ 'SETTINGS' | translate }}">
                         <span class="fa fa-cogs"></span>
                     </a>
                 </li>
                 <li>
-                    <a ng-click="minimize()" style="height: 50px;" title="{{ 'MINIMIZE' | translate }}">
+                    <a ng-click="minimize()" title="{{ 'MINIMIZE' | translate }}">
                         <span class="fa fa-minus"></span>
                     </a>
                 </li>
                 <li>
-                    <a ng-click="toggleFullscreen()" style="height: 50px;" title="{{ 'MAXIMIZE' | translate }}">
+                    <a ng-click="toggleFullscreen()" title="{{ 'MAXIMIZE' | translate }}">
                         <span class="glyphicon glyphicon-fullscreen"></span>
                     </a>
                 </li>
                 <li>
-                    <a ng-click="showSignOut()" style="height: 50px;" title="{{ 'CLOSE' | translate }}">
+                    <a ng-click="showSignOut()" title="{{ 'CLOSE' | translate }}">
                         <span class="fa fa-sign-out"></span>
                     </a>
                 </li>
             </ul>
         </div>
-        <div class="clearfix"></div>
+    </nav>
+    <!-- Search results div -->
+    <div ng-hide="animeSearch.length == 0" class="slide-box" ng-cloak>
+        <div class="panel-heading" style="border-radius:0;">
+            <ANY translate="RESULT_COUNT" translate-value-count="{{animeSearch.length}}"></ANY>
+            <i class="fa fa-close pull-right" style="color:#ABABAB; cursor:pointer;" ng-click="reset()"></i>
+            <div class="clearfix"></div>
+        </div>
+        <ul id="search-list" class="list-unstyled list-group">
+            <li class="list-group-item" ng-repeat="anime in animeSearch">
+                <a ng-href="#/detail/{{anime.AnimeId}}" ng-click="reset()">
+                    <img class="media-object pull-left img-responsive" style="border-radius:4px; width:50px;" ng-src="{{anime.PosterPath.formatPosterPath(300)}}" style="max-height:55px;">
+                    <div class="media-body" style="padding-left:10px;">
+                        <h5 class="media-heading">{{anime.OriginalName}}</h5>
+                        <small class="text-muted" ng-hide="anime.IsMovie"><ANY translate="EPISODE_COUNT" translate-value-count="{{anime.EpisodeCount}}"></ANY></small>
+                        <small class="text-muted" ng-show="anime.IsMovie"><ANY translate="MINUTES_TIME" translate-value-time="{{anime.RunningTime}}"></ANY></small>
+                    </div>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+        </ul>
     </div>
-</nav>
+</div>

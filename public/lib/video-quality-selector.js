@@ -117,11 +117,17 @@
 			
 			// Call the parent constructor
 			_V_.MenuButton.call( this, player, options );
+			
+			// Set the button text based on the option provided
+			this.el().firstChild.firstChild.innerHTML = options.buttonText;
 		}
 	});
 	
+	// Set class for resolution selector button
+	_V_.ResolutionSelector.prototype.className = 'vjs-res-button';
+	
 	// Create a menu item for each available resolution
-	_V_.ResolutionSelector.prototype.createItems = function() {		
+	_V_.ResolutionSelector.prototype.createItems = function() {
 		
 		var player = this.player(),
 			items = [],
@@ -133,7 +139,7 @@
 			el : _V_.Component.prototype.createEl( 'li', {
 				
 				className	: 'vjs-menu-title vjs-res-menu-title',
-				innerHTML	: 'Quality'
+				innerHTML	: player.localize( 'Quality' )
 			})
 		}));
 		
@@ -258,7 +264,7 @@
 		}
 		
 		// Make sure we have at least 2 available resolutions before we add the button
-		if ( available_res.length < 2 ) { return; }
+		//if ( available_res.length < 2 ) { return; }
 		
 		// Loop through the choosen default resolutions if there were any
 		for ( i = 0; i < default_resolutions.length; i++ ) {
@@ -275,6 +281,15 @@
 		/*******************************************************************
 		 * Add methods to player object
 		 *******************************************************************/
+		
+		// Make sure we have player.localize() if it's not defined by Video.js
+		if ( typeof player.localize !== 'function' ) {
+			
+			player.localize = function( string ) {
+				
+				return string;
+			};
+		}
 		
 		// Helper function to get the current resolution
 		player.getCurrentRes = function() {
@@ -338,7 +353,7 @@
 					
 					button_node_count--;
 					
-					if ( 'vjs-current-res' == button_nodes[button_node_count].className ) {
+					if ( 'vjs-control-text' == button_nodes[button_node_count].className ) {
 						
 						button_nodes[button_node_count].innerHTML = methods.res_label( target_resolution );
 						break;
@@ -361,16 +376,7 @@
 		
 		// Add the resolution selector button
 		resolutionSelector = new _V_.ResolutionSelector( player, {
-			
-			el : _V_.Component.prototype.createEl( null, {
-				
-				className	: 'vjs-res-button vjs-menu-button vjs-control',
-				innerHTML	: '<div class="vjs-control-content"><span class="vjs-current-res">' + ( current_res || 'Quality' ) + '</span></div>',
-				role		: 'button',
-				'aria-live'	: 'polite', // let the screen reader user know that the text of the button may change
-				tabIndex	: 0
-				
-			}),
+			buttonText		: player.localize( current_res || 'Quality' ),
 			available_res	: available_res
 		});
 		

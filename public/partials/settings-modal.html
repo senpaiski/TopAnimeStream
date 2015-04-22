@@ -1,41 +1,90 @@
 <div class="modal-header">
     <a class="close" ng-click="cancel()">&times;</a>
-    <h3 class="modal-title">{{ 'SETTINGS' | translate }}</h3> 
-    <div class="text-muted" style="margin-top:5px;">App version: {{appVersion}} - <a ng-click="showReleaseNotes()" style="cursor:pointer;">{{ 'RELEASE_NOTES' | translate }}</a>
+    <h3 class="modal-title">{{ 'SETTINGS' | translate }}</h3>
+    <div class="text-muted" style="margin-top:5px;">
+        App version: {{appVersion}} - <a ng-click="showReleaseNotes()" style="cursor:pointer;">{{ 'RELEASE_NOTES' | translate }}</a>
     </div>
 </div>
 <div class="modal-body">
     <div class="form-group">
-        <label class="control-label">Anime language match</label>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" ng-model="languageMatch" style="margin-top:0;">Display animes available <strong>only</strong> in my default language.
-            </label>
+        <label class="control-label">Preferred video quality</label>
+        <p style="font-size:12px;" class="text-muted">Automatically select the preferred video quality when possible. If a video file has multiple video quality available, your preferred quality will be selected even if it is not the first quality in the video.</p>
+        <div class="dropdown" style="margin-top:5px;">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                720p
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li>
+                    <a ng-click="">1080p</a>
+                </li>
+                <li>
+                    <a ng-click="">720p</a>
+                </li>
+                <li>
+                    <a ng-click="">360p</a>
+                </li>
+            </ul>
         </div>
     </div>
     <hr>
     <div class="form-group">
-        <label class="control-label">API - Secure connection</label>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" ng-model="useSecureConnection" style="margin-top:0;">Use secure connection for TopAnimeStream API (<span class="text-success">https</span>)
-            </label>
+        <label class="control-label">Preferred audio language</label>
+        <p style="font-size:12px;" class="text-muted">Automatically select audio tracks in your preferred language when possible. If a video file has multiple audio tracks, a track whose language matches your preferred language will be selected even if it is not the first audio track.</p>
+        <div class="dropdown" style="margin-top:5px;">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                <i class="famfamfam-flag-jp"></i>&nbsp;&nbsp;Japanese
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li ng-class="">
+                    <a ng-click="switchLanguage('jp')"><i class="famfamfam-flag-jp"></i>&nbsp;&nbsp;Japanese</a>
+                </li>
+                <li ng-class="">
+                    <a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
+                </li>
+
+            </ul>
         </div>
     </div>
     <hr>
     <div class="form-group">
-        <label class="control-label">Default language</label>
+        <label class="control-label">Preferred subtitle language</label>
+        <p style="font-size:12px;" class="text-muted">Automatically select the subtitle in your preferred language when possible. If you select 'None' the player will never use subtitles.</p>
+        <div class="dropdown" style="margin-top:5px;">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                None
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li ng-class="">
+                    <a ng-click="switchLanguage('none')">None</a>
+                </li>
+                <li ng-class="">
+                    <a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label class="control-label">App language</label>
+        <p style="font-size:12px;" class="text-muted">Change the language of the application.</p>
         <div class="dropdown" style="margin-top:5px;">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                 <i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                <li ng-class="{active:isLangActive('en')}"><a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
+                <li ng-class="{active:isLangActive('en')}">
+                    <a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
                 </li>
-                <li ng-class="{active:isLangActive('fr')}"><a ng-click="switchLanguage('fr')"><i class="famfamfam-flag-fr"></i>&nbsp;&nbsp;Français</a>
+                <li ng-class="{active:isLangActive('fr')}">
+                    <a ng-click="switchLanguage('fr')"><i class="famfamfam-flag-fr"></i>&nbsp;&nbsp;Français</a>
                 </li>
-                <li ng-class="{active:isLangActive('es')}"><a ng-click="switchLanguage('es')"><i class="famfamfam-flag-es"></i>&nbsp;&nbsp;Español</a>
+                <li ng-class="{active:isLangActive('es')}">
+                    <a ng-click="switchLanguage('es')"><i class="famfamfam-flag-es"></i>&nbsp;&nbsp;Español</a>
                 </li>
             </ul>
         </div>

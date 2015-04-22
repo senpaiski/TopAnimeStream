@@ -11,7 +11,13 @@ aniApp.config(function ($routeProvider, $compileProvider) {
             controller: 'Home',
             resolve: {
                 animes: function (aniDataFactory) {
-                    return aniDataFactory.getAnimes(0, 12, 'all');
+                    return aniDataFactory.getNewAvailableAnimes(0, 12);
+                },
+                links: function (aniDataFactory) {
+                    return aniDataFactory.getNewAddedLink(0, 12);
+                },
+                board: function (aniDataFactory) {
+                    return aniDataFactory.getTopics("&$filter=DisplayOnBoard%20eq%20true&$orderby=AddedDate%20desc");
                 }
             }
         })
@@ -39,10 +45,16 @@ aniApp.config(function ($routeProvider, $compileProvider) {
         .when('/uploads', {
             templateUrl: 'views/uploads.html',
             controller: 'Uploads'
+        }).when('/my-list', {
+            templateUrl: 'views/my-list.html',
+            controller: 'MyList'
+        }).when('/player', {
+            templateUrl: 'views/player.html',
+            controller: 'Player'
         })
-            .when('/test', {
-            templateUrl: 'views/test.html',
-            controller: 'Test'
+        .when('/friend-list', {
+            templateUrl: 'views/friend-list.html',
+            controller: 'FriendList'
         })
         .otherwise({
             redirectTo: '/login'

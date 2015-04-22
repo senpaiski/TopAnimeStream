@@ -1,56 +1,131 @@
 <style>
-    .animate-repeat.ng-move,
-    .animate-repeat.ng-enter,
-    .animate-repeat.ng-leave {
-        -webkit-transition: all linear 0.5s;
-        transition: all linear 0.5s;
+    /* Carousel */
+    .carousel {
+        border: thin solid #121212;
+        margin-bottom: 30px;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
     }
-    .animate-repeat.ng-leave.ng-leave-active,
-    .animate-repeat.ng-move,
-    .animate-repeat.ng-enter {
-        left: 100%;
-        opacity: 0;
+
+    .carousel-inner .item {
+        width: 100%;
+        height: 300px;
+        background-size: cover;
     }
-    .animate-repeat.ng-leave,
-    .animate-repeat.ng-move.ng-move-active,
-    .animate-repeat.ng-enter.ng-enter-active {
-        left: 0;
-        opacity: 1;
+
+    .carousel-caption {
+        margin: 0 auto;
+        margin-bottom: 30px;
+        z-index: 0;
     }
-    .thumbnail {
-        border-radius: 5px;
-        border-bottom-right-radius: 0px;
-        border-bottom-left-radius: 0px;
-        cursor: pointer;
+
+    .carousel-control {
+        cursor: pointer !important;
     }
-    .thumbnail a:hover {
-        text-decoration: none;
+    /* Custom - Home page css*/
+    #home {
+        margin: 65px 30px 30px 280px;
+        max-width: 750px;
     }
+
+    #body-header {
+        position: fixed;
+        z-index: 1000;
+        top: 50px;
+        width: 100%;
+    }
+
+        #body-header ul {
+            margin-bottom: 10px;
+            background-color: rgba(0, 0, 0, 0.51);
+            margin-left: 250px;
+            padding: 10px 26px;
+        }
+
+            #body-header ul li {
+                cursor: pointer;
+                color: #9a9a9a;
+            }
+
+                #body-header ul li:hover,
+                #body-header ul li.active {
+                    color: #eaeaea;
+                }
 </style>
 <div class="main">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header" style="margin-top:20px;">{{ 'HOME' | translate }}
-                    <small>{{ 'FEATURED_ANIMES' | translate }}</small>
-                </h1>
-            </div>
-        </div>
-        <div class="row">
-            <div ng-repeat="anime in animes" class="col-sm-4">
-                <div class="thumbnail float" style="min-height:310px; padding:0; max-height:310px; overflow:hidden;">
-                    <a ng-href="#/detail/{{anime.AnimeId}}">
-                        <div style="min-height:140px; position:relative; background: url('{{anime.BackdropPath.formatPosterPath(780)}}') center center no-repeat; background-size:cover;">
-                            <div class="anime-inner-box" style="width: 100%; height:100%; border-bottom:thin solid black; position: absolute; background: rgba(0, 0, 0, 0.6);">
+    <div id="anime-list" ng-show="isFrameActive('animes')" class="left-fixed-list">
+        <ul class="list-unstyled">
+            <li ng-repeat="link in links">
+                <a ng-href="#/detail/{{anime.AnimeId}}" title="{{anime.OriginalName}}">
+                    <div ng-show="link.Episode == null" style="background: url('{{link.Anime.BackdropPath.formatPosterPath(92)}}') center center no-repeat;" class="pull-left img">
+                    </div>
+                    <div ng-show="link.Episode != null" style="background: url('{{link.Episode.Screenshot.formatPosterPath(92)}}') center center no-repeat;" class="pull-left img">
+                    </div>
+                    <div class="body-text">
+                        <h4>{{link.Anime.OriginalName}}&nbsp;<small style="color:#e0e0e0" am-time-ago="link.AddedDate"></small></h4>
+                        <p ng-show="link.Episode != null">Episode {{link.Episode.EpisodeNumber}}</p>
+                        <p ng-show="link.Episode == null">{{link.Language.Name}}</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="board-list" ng-show="isFrameActive('board')" class="left-fixed-list">
+        <ul class="list-unstyled">
+            <li ng-repeat="topic in board" ng-class="{'active' : isTopicActive(topic)}" ng-click="selectTopic(topic)" style="cursor:pointer">
+                <div>
+                    <h4 style=" font-size:15px; color:#e0e0e0">{{topic.Title}}</h4>
+                    <div style="font-size:13px; color:#a3a3a3;">Posted <span am-time-ago="topic.AddedDate"></span> by {{topic.Account.Username}}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="body-header">
+        <ul class="list-unstyled list-inline">
+            <li ng-class="{'active' : isFrameActive('animes')}" ng-click="switchFrame('animes');"><i class="fa fa-th-list"></i>&nbsp;&nbsp;Latest animes</li>
+            <li ng-class="{'active' : isFrameActive('board')}" ng-click="switchFrame('board');"><i class="fa fa-newspaper-o"></i>&nbsp;&nbsp;Board</li>
+        </ul>
+    </div>
+    <div id="home">
+        <div id="latest-animes" ng-show="isFrameActive('animes')">
+            <div data-disable-animation="true">
+                <carousel interval="5000">
+                    <slide ng-repeat="anime in animes" active="anime.active">
+                        <div style="background: url({{anime.BackdropPath.formatPosterPath(1280)}}) no-repeat center center; background-size: cover;" class="absolute"></div>
+                        <div class="layer"></div>
+                        <div class="carousel-caption">
+                            <div class="media" style="padding:15px">
+                                <div class="media-body">
+                                    <h4 class="media-heading">{{anime.OriginalName}}</h4>
+                                    <p ng-bind="anime.AnimeInformations[0].Overview" style="max-height:105px; overflow:hidden;"></p>
+                                    <a href="#/detail/{{anime.AnimeId}}" class="btn btn-default btn-xs">View more</a>
+                                </div>
                             </div>
                         </div>
-                        <div class="caption">
-                            <h3>{{anime.OriginalName}}&nbsp;<small>{{anime.ReleasedDate.substring(0, 4)}}</small>
-                </h3>
-
+                    </slide>
+                </carousel>
+            </div>
+            <ul class="list-unstyled">
+                <li ng-repeat="anime in animes" style="margin-bottom:20px;">
+                    <a ng-href="#/detail/{{anime.AnimeId}}" style="text-decoration:none; color:#e0e0e0; display:block; height:145px;" title="{{anime.OriginalName}}">
+                        <div>
+                            <div style="height:145px; width:100px; border-radius:3px; overflow:hidden; background: url('{{anime.PosterPath.formatPosterPath(300)}}') center center no-repeat; background-size:cover;  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75); float:left; position:relative;">
+                            </div>
+                        </div>
+                        <div class="media-body text-left" style="padding-left:10px;">
+                            <h4>{{anime.OriginalName}}&nbsp;<small style="color:#bfbfbf">{{anime.ReleasedDate.substring(0, 4)}}</small></h4>
                             <p ng-bind="anime.AnimeInformations[0].Overview" style="max-height:105px; overflow:hidden;"></p>
                         </div>
                     </a>
+                </li>
+            </ul>
+        </div>
+        <div id="board" ng-show="isFrameActive('board')">
+            <div id="topic">
+                <div style="padding: 10px;">
+                    <h1 style="font-size: 28px; margin-top: 0; color: #cfcfcf;">{{selectedTopic.Title}}</h1>
+                    <div class="text-muted">Posted by <strong><a style="color:#076670">{{selectedTopic.Account.Username}}</a></strong> <span am-time-ago="selectedTopic.AddedDate"></span></div>
+                </div>
+                <div ng-bind-html="getSelectedTopicContent()" style="color: #898989; padding: 10px;">
                 </div>
             </div>
         </div>

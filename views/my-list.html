@@ -1,0 +1,125 @@
+<style>
+    #my-list {
+        margin-left: 250px;
+        padding: 30px;
+    }
+
+    #watching {
+        width: 100%;
+        display: block;
+        white-space: nowrap;
+        overflow-x: overlay;
+        height: 100%;
+        margin-top: 20px;
+        padding-bottom: 20px;
+    }
+
+        #watching li {
+            display: inline-block;
+        }
+
+            #watching li .body-text {
+                height: 30px;
+                width: 100%;
+                background-color: rgba(0, 0, 0, 0.65);
+                color: white;
+                position: absolute;
+                bottom: 0;
+            }
+
+                #watching li .body-text .time {
+                    font-size: 10px;
+                    margin-top: -13px;
+                    margin-right: 4px;
+                }
+
+                #watching li .body-text .time-line {
+                    background-color: rgba(26, 99, 126, 0.74);
+                    height: 3px;
+                    margin-top: -1px;
+                    border-radius-bottom-left: 3px;
+                }
+
+    #my-list-ul {
+        width: 100%;
+    }
+
+        #my-list-ul .my-list-li {
+            margin-bottom: 10px;
+            background: rgb(10, 17, 22);
+            box-shadow: 0 0 5px #071a24;
+            border-radius: 3px;
+            border: thin solid rgb(3, 11, 15);
+        }
+</style>
+<div class="main">
+    <div class="left-fixed-list">
+        <div style="color:#898989; margin:10px;" ng-show="videosBusy == true"><i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading</div>
+        <div style="color:#898989; margin:10px;" ng-show="watchedVideos.length == 0 && videosBusy == false">You did not watch anything yet.</div>
+        <ul class="list-unstyled">
+            <li ng-repeat="watch in watchedVideos">
+                <div style="cursor:pointer;">
+                    <div ng-show="watch.Episode == null" style="background: url('{{watch.Anime.BackdropPath.formatPosterPath(92)}}') center center no-repeat; background-size:cover;" class="pull-left img">
+                    </div>
+                    <div class="body-text" ng-show="watch.Episode == null">
+                        <h4 style="color:#ededed; font-size:13px;">{{watch.Anime.OriginalName}}&nbsp;</h4>
+                        <p style="color:#939393; font-size:11px;">
+                            You watched the movie <span am-time-ago="watch.AddedDate"></span>
+                        </p>
+                    </div>
+                    <div ng-show="watch.Episode !== null" style="background: url('{{watch.Episode.Screenshot.formatPosterPath(92)}}') center center no-repeat; background-size:cover;" class="pull-left img">
+                    </div>
+                    <div class="body-text" ng-show="watch.Episode !== null">
+                        <h4 style="color:#ededed; font-size:13px;">{{watch.Anime.OriginalName}}&nbsp;-&nbsp;Ep {{watch.Episode.EpisodeNumber}}</h4>
+                        <p style="color:#939393; font-size:11px;">
+                            You watched the episode <span am-time-ago="watch.AddedDate"></span>
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="my-list">
+        <div style="max-width:800px;">
+            <h4 style="color:#d6d6d6; margin:0;">Continue watching</h4>
+            <div style="color:#898989; display:none;">You don't have any continious episode to watch or your account is not premium.</div>
+            <ul id="watching" class="list-unstyled">
+                <li ng-repeat="watch in watchedVideos">
+                    <div style="width:250px; position:relative; height:150px; margin-right:10px; overflow:hidden; background: url('      https://lh5.googleusercontent.com/-G0Xd8o-2OGM/VR_QVv7fM3I/AAAAAAAAAZE/vaI_0IDWM8I/s288/%25255BCBM%25255D_Psycho-Pass_-_01_-_Crime_Coefficient_%25255B1080p-AC3%25255D_%25255BAF6D4363%25255D.mkv.png') center center no-repeat; background-size:cover; float:left; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);">
+                        <div class="body-text">
+                            <div class="time pull-right">{{watch.Time}}</div>
+                            <div style="width:90%;" class="time-line"></div>
+                            <div style="margin:7px;">
+                                <div class="pull-left">{{watch.Anime.OriginalName}} - Ep 1</div>
+                                <i class="fa fa-cog pull-right"></i>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div style="margin-top:10px;">
+                <h4 style="color:#d6d6d6;">My List</h4>
+                <div style="overflow:auto; margin-top:10px;">
+                    <div style="color:#898989;" ng-show="animesBusy == true"><i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading</div>
+                    <div style="color:#898989;" ng-show="watchAnimes.length == 0 && animesBusy == false">User anime list is empty.</div>
+                    <ul id="my-list-ul" class="list-unstyled">
+                        <li ng-repeat="watch in watchedAnimes" class="my-list-li">
+                            <div style="padding: 7px;">
+                                <ul class="list-inline list-unstyled pull-left" style="color:#8b8b8b;">
+                                    <li>
+                                        <i class="fa fa-lock" ng-show="watch.IsPrivate" style="color:#656565;" title="Only you can see this">&nbsp;&nbsp;</i><a href="#/detail/{{watch.Anime.AnimeId}}" style="color:#c7c7c7;">{{watch.Anime.OriginalName}}</a>
+                                    </li>
+                                    <li>{{watch.WatchType.Name}}</li>
+                                </ul>
+                                <div class="pull-right" style="color:#ebebeb;">{{watch.TotalWatchedEpisodes}} / {{watch.Anime.EpisodeCount}}</div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div style="width:{{(watch.TotalWatchedEpisodes * 100) / watch.Anime.EpisodeCount}}%; background-color:rgba(15, 75, 90, 0.8); height:3px; margin-bottom:-1px; margin-left:-1px; border-radius-bottom-left:3px;"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

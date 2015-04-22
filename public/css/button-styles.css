@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 
 /*
 You are free to style the button however you wish. I plan to use
@@ -10,10 +10,11 @@ are just basic styles to make it look ok with plain text.
 .vjs-res-button {
 	float: right;
 	line-height: 3em;
+
 }
 
 /* Don't show hover effects on title */
-ul li.vjs-menu-title.vjs-res-menu-title:hover {
+/*ul li.vjs-menu-title.vjs-res-menu-title:hover {
 	cursor: default;
 	background-color: transparent;
 	color: #CCC;
@@ -21,4 +22,9 @@ ul li.vjs-menu-title.vjs-res-menu-title:hover {
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
+}*/
+
+/* Needed to keep text visible in video.js 4.9 */ 
+.vjs-res-button .vjs-control-text {
+   position: relative;
 }

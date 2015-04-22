@@ -1,59 +1,64 @@
 <style>
-    .masonry-brick {
-        cursor: pointer;
-    }
-    .shadow {
-        display: block;
-        position: relative;
-    }
-    .shadow img {
-        display: block;
-    }
-    .shadow:hover::before {
-        box-shadow: none;
-    }
-    .shadow::before {
-        display: block;
-        content: '';
-        position: absolute;
-        width: 160px;
+    #box-filter {
+        background-color: rgb(11, 15, 20);
+        width: 150px;
+        padding: 0 10px;
+        position: fixed;
         height: 100%;
-        box-shadow: inset 0px 0px 50px 1px rgba(0, 0, 0, 0.8);
+        box-shadow: rgba(0, 0, 0, 0.17) 5px 0px 1px 0px;
+        margin-top: 50px;
+        z-index: 2;
     }
-    h5 {
-        margin-top: 0;
-        font-size: 15px;
+    #box-filter h4 {
+        color: #adadad;
+        font-size: 14px;
     }
-    .thumbnail {
-        border-radius: 4px;
-        border-bottom-right-radius: 0px;
-        border-bottom-left-radius: 0px;
+    #box-filter li {
+        color: #656565;
+        font-size: 14px;
+        margin-bottom: 2px;
+    }
+    #box-filter li:hover {
+        color: #868686;
         cursor: pointer;
     }
-    .thumbnail a:hover {
-        text-decoration: none;
+    .blue-header {
+        background-color: rgba(3, 15, 25, 0.83);
+        width: 100%;
+        padding: 10px;
+    }
+    .blue-header li {
+        color: #656565;
+    }
+    ::-webkit-scrollbar {
+        display: none;
     }
 </style>
-<div style="margin-top:65px;">
-    <div class="container-fluid" style="maring: 0 auto;padding: 0;">
-        <div id="container" class="col-lg-12" infinite-scroll="loadMore()" infinite-scroll-distance="3">
-            <div ng-repeat="anime in animes" style="float:left; margin-right:10px;">
-                <div class="thumbnail float" style="min-height:270px; width:150px; padding:0; max-height:270px; overflow:hidden;">
-                    <a ng-href="#/detail/{{anime.AnimeId}}">
-                        <div style="min-height:200px; overflow:hidden;  position:relative; background: url('{{anime.PosterPath.formatPosterPath(300)}}') center center no-repeat; background-size:cover;">
-                            <div class="anime-inner-box" style="width: 100%; height:100%; border-bottom:thin solid black; position: absolute; background: rgba(0, 0, 0, 0.3);">
-                            </div>
-                        </div>
-                        <div class="caption">
-                            <h5>
-                    {{anime.OriginalName.trimToLength(45)}}
-                            <small>{{anime.ReleasedDate.substring(0, 4)}}</small>
-                </h5>
-                        </div>
-                    </a>
-                </div>
+<div style="padding-top: 60px;
+height: 100%;
+width: 97%;
+overflow: auto;
+margin-left: 20px;" when-scrolled-down="loadMore()">
+    <div style="margin-top:15px">
+        <div ng-repeat="anime in animes" class="hvr-float" style="float:left; margin-right:10px;">
+            <div class="float" style="max-width:120px; min-height:220px;">
+                <a ng-href="#/detail/{{anime.AnimeId}}" style="text-decoration:none; color:#e0e0e0" title="{{anime.OriginalName}}">
+                    <div style="height:170px; width:120px; overflow:hidden; border-radius:3px; position:relative; background: url('{{anime.PosterPath.formatPosterPath(300)}}') center center no-repeat; background-size:cover;" class="shadow">
+                    </div>
+
+                    <div class="caption">
+                        <div style="max-height:20px; margin-top:5px; text-overflow: ellipsis;   white-space: nowrap;
+  overflow: hidden;">{{anime.OriginalName}}</div>
+                        <small style="color:#bfbfbf">{{anime.ReleasedDate.substring(0, 4)}}</small>
+
+                    </div>
+                </a>
             </div>
-            <div class="clearfix"></div>
         </div>
+        <div class="clearfix"></div>
     </div>
+</div>
+<div ng-show="animes.length == 0" class='fullscreen-div'>
+    <div ng-show="busy == false" class="center" style="color:#d6d6d6; font-size:17px; text-align:center;">No results found</div>
+    <div ng-show="busy == true" class="center" style="color:#d6d6d6; font-size:17px; text-align:center;"><i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading</div>
 </div>

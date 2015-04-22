@@ -1,20 +1,24 @@
 TopAnimeStream
 ========
-TopAnimeStream App stream anime & cartoons from popular video streaming sites.
-Works on major pc platform like Windows, Linux & Mac. You can currently watch anime in english, spanish or french.
+Currently in development! The app will only work for me since I did not update the TopAnimeStream service in production. 
 
-TopAnimeStream App is currently in `beta`
+TopAnimeStream App stream anime from TopAnimeStream website.
+Works on major pc platform like Windows, Linux & Mac.
+
+TopAnimeStream App v.2 is currently in `development`
+
+##New features
+- TODO
 
 ##How to use (Step by step)
-1. Register an account with TopAnimeStream from [https://www.topanimestream.com/en/register/](https://www.topanimestream.com/en/register/)
-2. Download the TopAnimeStream App here or from [https://www.topanimestream.com/en/downloads/](https://www.topanimestream.com/en/downloads/)
+1. Register an account with TopAnimeStream from [http://www.topanimestream.com/en/register/](http://www.topanimestream.com/en/register/)
+2. Download link comming soon.
 3. Install the app with the setup file.
 4. Start the app, login and select the anime you want to watch and click play.
 5. Enjoy
  
 ##Screenshots
-![TopAnimeStream App detail page](http://www.topanimestream.com/ImageHost/56/39/8/desktop_app_topanimestream_detail_page.jpg)
-![TopAnimeStream App watch episode](http://www.topanimestream.com/ImageHost/55/39/8/desktop_app_topanimestream_player.jpg)
+New screenshot comming soon
 
 ##Libraries
 - Node-webkit (App runtime based on Chromium and node.js)
@@ -27,7 +31,7 @@ TopAnimeStream App is currently in `beta`
 ###For programmers
 Feel free to fork the project and submit your changes as Pull Requests. If we agree with the new changes, we'll merge it into the master branch.
 ###For anime freaks
-If you love animes a lot and you are ready to contribute to the project. You should register an account at [https://www.topanimestream.com/en/register/](https://www.topanimestream.com/en/register/) and ask us what kind of work you want to contribute. For instance
+If you love animes a lot and you are ready to contribute to the project. You should register an account at [http://www.topanimestream.com/en/register/](http://www.topanimestream.com/en/register/) and ask us what kind of work you want to contribute. For instance
 - Uploader
 - Translator
 - Moderator  

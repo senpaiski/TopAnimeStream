@@ -4,16 +4,16 @@ module.exports = function (grunt) {
             options: {
                 keep_nw: true,
                 embed_nw: false,
-                //version: '0.11.1',
-                build_dir: './builds', // Where the build version of my node-webkit app is saved
-                mac: true, // We want to build it for mac
-                win: true, // We want to build it for win
-                linux32: true, // We don't need linux32
-                linux64: true, // We don't need linux64
+                version: '0.9.2',
+                build_dir: './builds', // Build patth
+                mac: true,
+                win: true,
+                linux32: true,
+                linux64: true,
                 macZip: true
                 //mac_icns: './public/img/icon.icns'
             },
-            src: ['./node_modules/**', '!./node_modules/*grunt*/**', './views/**', './public/**', './plugins/**', './tools/**', './README.md', './package.json', './LICENSE', './index.html']
+            src: ['./node_modules/**', '!./node_modules/*grunt*/**', './views/**', './public/**', './plugins/**', './tools/**', './README.md', './package.json', './LICENSE', './settings.json', './index.html']
         },
         copy: {
             main: {

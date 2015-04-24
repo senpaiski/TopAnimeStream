@@ -14,6 +14,7 @@
 
 (function () {
     'use strict';
+
     /******************************************/
     /*            Menu Title for all List     */
     /******************************************/
@@ -90,7 +91,7 @@
 
         //Add title
         items.push(new videojs.TitleMenutItem(this.player(), {
-            el: _V_.Component.prototype.createEl('li', {
+            el: videojs.Component.prototype.createEl('li', {
                 className: 'vjs-menu-title vjs-res-menu-title',
                 innerHTML: 'Episodes'
             })
@@ -171,7 +172,7 @@
 
         //Add title
         items.push(new videojs.TitleMenutItem(this.player(), {
-            el: _V_.Component.prototype.createEl('li', {
+            el: videojs.Component.prototype.createEl('li', {
                 className: 'vjs-menu-title vjs-res-menu-title',
                 innerHTML: 'Audio'
             })
@@ -247,11 +248,12 @@
     // Create a menu item for each available quality
     videojs.QualitySelector.prototype.createItems = function () {
         var items = [],
+            qualities = [],
             sources = this.player().sources;
 
         //Add title
         items.push(new videojs.TitleMenutItem(this.player(), {
-            el: _V_.Component.prototype.createEl('li', {
+            el: videojs.Component.prototype.createEl('li', {
                 className: 'vjs-menu-title vjs-res-menu-title',
                 innerHTML: 'Quality'
             })
@@ -260,9 +262,16 @@
         // Add quality menu items to list
         for (var i = 0; i < sources.length; i++) {
             var source = sources[i];
+
+            //Avoid duplicate quality
+            if (qualities.indexOf(source.Quality) !== -1)
+                continue;
+
             items.push(new videojs.QualityMenuItem(this.player(), {
                 quality: source.Quality.replace('p', '')
             }));
+
+            qualities.push(source.Quality);
         }
 
         // Sort the available qualities in DESC
@@ -302,17 +311,17 @@
 
             //Build & display video name
             if (player.currentEpisode !== undefined) {
-                player.videoName = player.anime.OriginalName + " - Episode " + player.currentEpisode.EpisodeNumber + " (" + player.currentEpisode.getEpisodeInformation().EpisodeName + ")";
+                player.videoName = "Episode " + player.currentEpisode.EpisodeNumber + " - " + player.currentEpisode.getEpisodeInformation().EpisodeName;
             } else {
                 player.videoName = player.anime.OriginalName;
             }
         }
 
         // Player object methods
-        player.load = function (animeId, episodeId, callback) {
+        player.loadTAS = function (animeId, episodeId, callback) {
             var service = this.aniDataService,
                 player = this;
-
+            console.log('Load!!');
             //Get source
             service.getSources(animeId, episodeId).then(function (data) {
                 var sources = data.value;
@@ -320,9 +329,30 @@
 
                 //Get subtitles
                 service.getSubtitles(animeId, episodeId).then(function (subData) {
-                    var subtitles = subData.value;
-                    player.subtitles = subtitles;
-
+                    var subtitles = subData.value,
+                        tracks = player.remoteTextTracks().tracks_;
+    
+                    //Clear any previous text tracks (subtitles)
+                    for(var i = 0; i < tracks.length; i++) {
+                        player.removeRemoteTextTrack(tracks[i]);
+                                   console.log('Delete ' + tracks[i]);
+                    }
+                    
+                    //Add subtitles
+                    for(var i = 0; i < subtitles.length; i++) {  
+                        var sub = subtitles[i];
+                        
+                        //add new text tracks
+                        var options = {
+                            kind: 'subtitles',
+                            label: sub.Language.Name + " " + sub.Specification,
+                            srclang: sub.Language.ISO639,
+                            src: 'http://www.topanimestream.com/SubHost/' + sub.RelativeUrl
+                        };
+                        
+                        player.addRemoteTextTrack(options);
+                    }
+                    
                     return callback();
                 });
 
@@ -370,7 +400,7 @@
         }
 
         player.changeLanguage = function (lang) {
-            var sources = this.options().sources;
+            var sources = this.sources;
 
             for (var i = 0; i < sources.length; i++) {
                 var source = sources[i];
@@ -387,25 +417,6 @@
                     break;
                 }
             }
-        }
-
-        player.addSubtitles = function (subs) {
-            // Clear subtitles
-            $("video").children().unbind();
-            var track = document.createElement("track");
-
-            // Add tracks
-            track.kind = "subtitles";
-            track.label = "english";
-            track.srclang = "en";
-            track.src = "captions/sintel-en.srt";
-            track.addEventListener("load", function () {
-                this.mode = "showing";
-
-            });
-
-            $("video").append(track);
-            this.trigger("textTracksChanged");
         }
 
         // Assign prefered language or default
@@ -435,9 +446,6 @@
                 console.log(quality + " - " + player.currentQuality);
                 console.log(language + " - " + player.currentLanguage);
                 if (quality == player.currentQuality && language.toLowerCase() == player.currentLanguage.toLowerCase()) {
-                    //Add subtitles
-                    player.addSubtitles(subtitles);
-
                     //Change source
                     player.changeSource(source.Url, false);
                     break;
@@ -447,7 +455,7 @@
 
         player.changeEpisode = function (episode) {
             var player = this;
-            player.load(episode.AnimeId, episode.EpisodeId, function () {
+            player.loadTAS(episode.AnimeId, episode.EpisodeId, function () {
                 player.currentEpisode = episode;
                 player.buildVideoName();
                 // Update the classes to reflect the currently selected episode
@@ -459,13 +467,13 @@
 
         //Play video
         if (player.currentEpisode !== undefined) {
-            player.load(options.anime.AnimeId, options.currentEpisode.EpisodeId, function () {
+            player.loadTAS(options.anime.AnimeId, options.currentEpisode.EpisodeId, function () {
                 player.buildVideoName();
                 loadControlBar(player, options);
                 player.start();
             });
         } else {
-            player.load(options.anime.AnimeId, null, function () {
+            player.loadTAS(options.anime.AnimeId, null, function () {
                 player.buildVideoName();
                 loadControlBar(player, options);
                 player.start();

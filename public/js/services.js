@@ -89,8 +89,8 @@ aniApp.factory('account', function ($q, aniFactory, aniDataFactory) {
 
 //AnimeDataService API
 aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCacheFactory) {
-    //var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeDataService.svc',
-    var baseUrl = 'http://localhost:3772/AnimeDataService.svc',
+    var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeDataService.svc',
+    //var baseUrl = 'http://localhost:3772/AnimeDataService.svc',
         dataFactory = {};
 
     //Prepare caching for better user experience
@@ -581,8 +581,8 @@ aniApp.factory('aniFactory', function ($http, $translate, $q) {
     var BasicHttpBinding = require('wcf.js').BasicHttpBinding,
         Proxy = require('wcf.js').Proxy;
 
-    //var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeService.svc',
-    var baseUrl = 'http://localhost:3772/AnimeService.svc',
+    var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeService.svc',
+    //var baseUrl = 'http://localhost:3772/AnimeService.svc',
         baseInterface = 'http://tempuri.org/IAnimeService',
         envelope = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header><Lang>{0}</Lang><Authentication>{1}</Authentication></s:Header><s:Body>{2}</s:Body></s:Envelope>',
         binding = new BasicHttpBinding({
@@ -630,9 +630,9 @@ aniApp.factory('aniFactory', function ($http, $translate, $q) {
         var message = '';
         console.log('Episode' + episodeId);
         if (episodeId !== null) {
-            message = '<MarkWatch xmlns="http://tempuri.org/"><animeId>' + animeId + '</animeId>' + '<episodeId>' + episodeId + '</episodeId>' + '<time>' + time + '</time>' + '<isComplete>' + isComplete + '</isComplete></MarkWatch>';
+            message = '<MarkWatch xmlns="http://tempuri.org/"><animeId>' + animeId + '</animeId><episodeId>' + episodeId + '</episodeId><time>' + time + '</time><duration>' + duration + '</duration><isComplete>' + isComplete + '</isComplete></MarkWatch>';
         } else {
-            message = '<MarkWatch xmlns="http://tempuri.org/"><animeId>' + animeId + '</animeId><time>' + time + '</time>' + '<isComplete>' + isComplete + '</isComplete></MarkWatch>';
+            message = '<MarkWatch xmlns="http://tempuri.org/"><animeId>' + animeId + '</animeId><time>' + time + '</time><duration>' + duration + '</duration><isComplete>' + isComplete + '</isComplete></MarkWatch>';
         }
       
         var deferred = $q.defer();

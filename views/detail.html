@@ -7,7 +7,6 @@
         height: 100%;
         color: rgb(207, 207, 207);
     }
-
     .layer {
         background-color: rgba(2, 9, 18, 0.9);
         position: absolute;
@@ -17,7 +16,6 @@
         height: 100%;
         -webkit-box-shadow: inset 0 -10px 45px -2px rgb(12, 12, 12);
     }
-
     .video-js {
         width: 100% !important;
         position: absolute !important;
@@ -25,7 +23,6 @@
         top: 0;
         bottom: 0;
     }
-
     #div-player {
         position: absolute;
         top: 50px;
@@ -34,7 +31,6 @@
         bottom: 0;
         overflow: overlay;
     }
-
     #div-episodes {
         position: absolute;
         top: 0;
@@ -46,7 +42,6 @@
         overflow: auto;
         padding-top: 90px;
     }
-
     .blue-header {
         position: absolute;
         top: 50px;
@@ -55,11 +50,9 @@
         width: 100%;
         padding: 10px;
     }
-
     .active {
         background-color: rgba(0, 0, 0, 0.3);
     }
-
     .episode-list li a {
         text-decoration: none !important;
         height: 55px;
@@ -68,45 +61,37 @@
         cursor: pointer;
         display: block;
     }
-
     .episode-list li h4 {
         font-size: 15px;
         margin-left: 90px;
         margin-top: 5px;
     }
-
     #latest-list li:hover {
         background-color: rgba(0, 0, 0, 0.3);
     }
-
     .nav-tabs {
         border-bottom: none;
     }
-
-        .nav-tabs > li.active > a,
-        .nav-tabs > li.active > a:hover,
-        .nav-tabs > li.active > a:focus {
-            background-color: rgb(3, 14, 17);
-            border: thin solid rgb(1, 8, 12);
-            color: rgb(221, 221, 221);
-        }
-
-        .nav-tabs > li {
-            background-color: rgba(3, 10, 17, 0.16);
-            color: white !important;
-        }
-
-            .nav-tabs > li > a:hover {
-                background-color: rgb(3, 14, 17);
-                border: thin solid rgb(1, 8, 12);
-                color: rgb(221, 221, 221);
-                cursor: pointer;
-            }
-
-            .nav-tabs > li > a {
-                color: rgb(146, 146, 146);
-            }
-
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus {
+        background-color: rgb(3, 14, 17);
+        border: thin solid rgb(1, 8, 12);
+        color: rgb(221, 221, 221);
+    }
+    .nav-tabs > li {
+        background-color: rgba(3, 10, 17, 0.16);
+        color: white !important;
+    }
+    .nav-tabs > li > a:hover {
+        background-color: rgb(3, 14, 17);
+        border: thin solid rgb(1, 8, 12);
+        color: rgb(221, 221, 221);
+        cursor: pointer;
+    }
+    .nav-tabs > li > a {
+        color: rgb(146, 146, 146);
+    }
     .vjs-default-skin .vjs-control-bar {
         margin: 20px auto;
         border-radius: 5px;
@@ -115,47 +100,39 @@
         background-color: rgb(10, 37, 49);
         max-width: 800px;
     }
-
     .vjs-default-skin .vjs-progress-control {
         height: 7px;
         top: -15px;
         margin-right: 40px;
     }
-
     .vjs-default-skin .vjs-current-time {
         position: absolute;
         top: -26px;
         right: -4px;
     }
-
     .vjs-default-skin .vjs-language-button:before {
         font-family: FontAwesome;
         content: "\f075";
     }
-
     .vjs-default-skin .vjs-subtitles-button:before {
         content: "\e008";
     }
-
     .vjs-default-skin .vjs-res-button:before {
         font-family: FontAwesome;
         content: "\f013";
     }
-
     .vjs-default-skin .vjs-list-button:before {
         font-family: FontAwesome;
         content: "\f00b";
     }
-
     .vjs-default-skin .vjs-next-button:before {
         font-family: FontAwesome;
         content: "\f051";
     }
-
-    .vjs-default-skin .vjs-time-divider, .vjs-default-skin .vjs-duration {
+    .vjs-default-skin .vjs-time-divider,
+    .vjs-default-skin .vjs-duration {
         display: none;
     }
-
     .vjs-default-skin .vjs-name-button {
         text-align: left;
         width: auto;
@@ -164,16 +141,21 @@
         line-height: 28px;
         margin-left: -45px;
     }
-
     ul li.vjs-menu-title.vjs-res-menu-title:hover {
-	    cursor: default;
-	    background-color: transparent;
-	    color: #CCC;
-	    -moz-box-shadow: none;
-	    -webkit-box-shadow: none;
-	    box-shadow: none;
+        cursor: default;
+        background-color: transparent;
+        color: #CCC;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
     }
-
+    .vjs-default-skin .vjs-name-button .vjs-control-content {
+        width: 450px;
+        text-overflow: ellipsis;
+        /* word-wrap: normal; */
+        white-space: nowrap;
+        overflow: hidden;
+    }
 </style>
 <div style=" background-color: rgb(10, 31, 39); position: absolute; top: 0; left: 0;  width: 100%; height: 100%;"></div>
 <div class="back" style="background: url('http://www.topanimestream.com/ImageHost/{{anime.BackdropPath}}') no-repeat center center;-webkit-background-size: cover; opacity:0.05"></div>
@@ -250,19 +232,12 @@
                     <rating ng-model="anime.Rating" max="10" readonly="true"></rating>
                     <ANY translate="RATING_STARS_VOTECOUNT" translate-value-stars="{{anime.Rating}}" translate-value-votecount="{{anime.VoteCount}}"></ANY>
                 </div>-->
-            <p s
-
-
-            <p s
-               ty
-            <p style=
-            <p style="line-height: 18px;">
+            <p s <p s ty <p style=< p style="line-height: 18px;">
                 {{anime.getAnimeInformation().getOverview()}}
                 <div ng-hide="anime.getAnimeInformation()">{{ "NO_DESCRIPTION" | translate }}</div>
             </p>
             <ul class="list-inline" style="color: #747474; margin-bottom:20px;">
-                <li ng-
-                <li ng-repeat="genre in anime.Genres">
+                <li ng- <li ng-repeat="genre in anime.Genres">
                     {{genre.Name.capitalize()}}
                 </li>
                 <li ng-repeat="theme in anime.Themes">

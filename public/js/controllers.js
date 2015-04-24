@@ -18,14 +18,14 @@ aniApp.controller('App', function ($rootScope, $scope, aniDataFactory, $translat
 
     $scope.getCurrentLanguageId = function () {
         switch ($translate.use()) {
-            case "en":
-                return 1;
-            case "fr":
-                return 2;
-            case "es":
-                return 4;
-            default:
-                return 1;
+        case "en":
+            return 1;
+        case "fr":
+            return 2;
+        case "es":
+            return 4;
+        default:
+            return 1;
         }
     }
 
@@ -172,7 +172,8 @@ aniApp.controller('FriendList', function ($rootScope, $scope, account, aniDataFa
     // Configurations
     $.connection.hub.logging = true;
     $.connection.hub.transportConnectTimeout = 3000;
-    $.connection.hub.url = 'http://localhost:3772/signalr';
+    //$.connection.hub.url = 'http://localhost:3772/signalr';
+    $.connection.hub.url = 'http://www.topanimestream.com/AnimeServices/signalr';
     $.connection.hub.qs = {
         "Authentication": account.getToken()
     };
@@ -407,16 +408,16 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                 for (var i = 0; i < subs.length; i++) {
                     subs[i].getFlag = function () {
                         switch (this.ISO639) {
-                            case "en":
-                                return "famfamfam-flag-us";
-                            case "fr":
-                                return "famfamfam-flag-fr";
-                            case "es":
-                                return "famfamfam-flag-es";
-                            case "ja":
-                                return "famfamfam-flag-ja";
-                            case "ro":
-                                return "famfamfam-flag-ro";
+                        case "en":
+                            return "famfamfam-flag-us";
+                        case "fr":
+                            return "famfamfam-flag-fr";
+                        case "es":
+                            return "famfamfam-flag-es";
+                        case "ja":
+                            return "famfamfam-flag-jp";
+                        case "ro":
+                            return "famfamfam-flag-ro";
                         }
 
 
@@ -434,14 +435,14 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                 for (var i = 0; i < audio.length; i++) {
                     audio[i].getFlag = function () {
                         switch (this.ISO639) {
-                            case "en":
-                                return "famfamfam-flag-us";
-                            case "fr":
-                                return "famfamfam-flag-fr";
-                            case "es":
-                                return "famfamfam-flag-es";
-                            case "ja":
-                                return "famfamfam-flag-ja";
+                        case "en":
+                            return "famfamfam-flag-us";
+                        case "fr":
+                            return "famfamfam-flag-fr";
+                        case "es":
+                            return "famfamfam-flag-es";
+                        case "ja":
+                            return "famfamfam-flag-jp";
                         }
 
                         return "";
@@ -484,115 +485,54 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
         $scope.selectedEpisode = episode;
         $scope.disposePlayer(); //Dispose player correctly
 
-        ////Get source
-        //aniDataFactory.getSources($scope.anime.AnimeId, episode.EpisodeId).then(function (data) {
-        //    $scope.sources = data.value;
-
-        //    //Remove previous data from other stream
-        //    $("#video-player").empty();
-
-        //    //Load new data (sources)
-        //    var videoData = "";
-        //    for (var i = 0; i < $scope.sources.length; i++) {
-        //        $scope.sources[i].Url = $sce.trustAsResourceUrl($scope.sources[i].Url);
-        //        videoData += "<source data-lang='" + $scope.sources[i].Link.Language.Name + "' data-res='" + $scope.sources[i].Quality.replace('p', '') + "' src='" + $scope.sources[i].Url + "' type='video/mp4' />";
-        //    }
-
-        //    //Load subtitles
-        //    aniDataFactory.getSubtitles($scope.anime.AnimeId, episode.EpisodeId)
-        //        .then(function (subData) {
-        //            var subtitles = subData.value;
-        //            //Load new subtitles
-        //            for (var i = 0; i < subtitles.length; i++) {
-        //                subtitles[i].Url = $sce.trustAsResourceUrl('http://www.topanimestream.com/SubHost/' + subtitles[i].RelativeUrl);
-        //                videoData += "<track kind='subtitles' src='" + subtitles[i].Url + "' srclang='" + subtitles[i].Language.ISO639 + "' label='" + subtitles[i].Language.Name + "' />";
-        //            }
-
-        //            //Build and assign video to app with sources and subtitles
-        //            document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'>" + videoData + "</video>";
-        aniFactory.markWatch($scope.anime.AnimeId, $scope.selectedEpisode.EpisodeId, "00:10:00", false);
-                    document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'></video>";
-                    //Load videojs framework with quality selector plugin
-                    $scope.video = videojs('videojs-player', {
-                        plugins: {
-                            tasPlugin: {
-                                "anime": $scope.anime,
-                                "currentEpisode": $scope.selectedEpisode,
-                                "aniDataService": aniDataFactory,
-                                "episodeList": $scope.episodes,
-                                "preferedLanguage": "english",
-                                "preferedSubtitle": "none",
-                                "preferedQuality": 360
-                            }
-                        },
-                        controls: true,
-                        autoplay: true,
-                        preload: "auto",
-                        techOrder: ["html5"]
-                    });
-        //        });
-
-        //}, function (reason) {
-        //    console.log(reason);
-        //});
+        document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'></video>";
+        //Load videojs framework with quality selector plugin
+        $scope.video = videojs('videojs-player', {
+            plugins: {
+                tasPlugin: {
+                    "anime": $scope.anime,
+                    "currentEpisode": $scope.selectedEpisode,
+                    "aniDataService": aniDataFactory,
+                    "episodeList": $scope.episodes,
+                    "preferedLanguage": "english",
+                    "preferedSubtitle": "none",
+                    "preferedQuality": 360
+                }
+            },
+            controls: true,
+            autoplay: true,
+            preload: "auto",
+            techOrder: ["html5"]
+        });
+        
+  
+              //Test save watch time
+        aniFactory.markWatch($scope.anime.AnimeId, null, $scope.video.currentTime(), $scope.video.duration(), false);
     }
 
     $scope.playMovie = function () {
         $scope.isPlayer = true;
         $scope.disposePlayer(); //Dispose player correctly
 
-        ////Get source
-        //aniDataFactory.getSources($scope.anime.AnimeId, null).then(function (data) {
-        //    $scope.sources = data.value;
-
-        //    //Remove previous data from other stream
-        //    $("#video-player").empty();
-
-        //    //Load new data (sources)
-        //    var videoData = "";
-        //    for (var i = 0; i < $scope.sources.length; i++) {
-        //        $scope.sources[i].Url = $sce.trustAsResourceUrl($scope.sources[i].Url);
-        //        videoData += "<source data-lang='" + $scope.sources[i].Link.Language.Name + "' data-res='" + $scope.sources[i].Quality.replace('p', '') + "' src='" + $scope.sources[i].Url + "' type='video/mp4' />";
-        //    }
-
-        //    //Load subtitles
-        //    aniDataFactory.getSubtitles($scope.anime.AnimeId, null)
-        //        .then(function (subData) {
-        //            var subtitles = subData.value;
-        //            //Load new subtitles
-        //            for (var i = 0; i < subtitles.length; i++) {
-        //                subtitles[i].Url = $sce.trustAsResourceUrl('http://www.topanimestream.com/SubHost/' + subtitles[i].RelativeUrl);
-        //                videoData += "<track kind='subtitles' src='" + subtitles[i].Url + "' srclang='" + subtitles[i].Language.ISO639 + "' label='" + subtitles[i].Language.Name + "' />";
-        //            }
-
-        //            //Build and assign video to app with sources and subtitles
-        //            document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'>" + videoData + "</video>";
-
-        aniFactory.markWatch($scope.anime.AnimeId, null, "10:00", false);
         document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'></video>";
-                    //Load videojs framework with quality selector plugin
-                    $scope.video = videojs('videojs-player', {
-                        plugins: {
-                            tasPlugin: {
-                                "anime": $scope.anime,
-                                "aniDataService": aniDataFactory,
-                                "preferedLanguage": "english",
-                                "preferedSubtitle": "none",
-                                "preferedQuality": 718
-                            }
-                        },
-                        controls: true,
-                        autoplay: true,
-                        preload: "auto",
-                        techOrder: ["html5"]
-                    });
+        //Load videojs framework with quality selector plugin
+        $scope.video = videojs('videojs-player', {
+            plugins: {
+                tasPlugin: {
+                    "anime": $scope.anime,
+                    "aniDataService": aniDataFactory,
+                    "preferedLanguage": "english",
+                    "preferedSubtitle": "none",
+                    "preferedQuality": 718
+                }
+            },
+            controls: true,
+            autoplay: true,
+            preload: "auto",
+            techOrder: ["html5"]
+        });
 
 
-        //        });
-
-        //}, function (reason) {
-        //    console.log(reason);
-        //});
     }
 });
 
@@ -733,57 +673,57 @@ aniApp.controller('Updater', function ($scope, $modalInstance, $sanitize, $filte
     var downloader;
 
     updater.checkNewVersion().then(function (info) {
-        if (info.newVersionExists) {
-            $scope.newVersion = info.manifest.latestVersion;
-            $scope.meetsVersionRequirement = info.meetsVersionRequirement;
-            $scope.currentVersion = pkg.version;
+            if (info.newVersionExists) {
+                $scope.newVersion = info.manifest.latestVersion;
+                $scope.meetsVersionRequirement = info.meetsVersionRequirement;
+                $scope.currentVersion = pkg.version;
 
-            if (info.meetsVersionRequirement) {
+                if (info.meetsVersionRequirement) {
 
-                $scope.isDownloading = true;
-                $scope.status = $filter('translate')('DOWNLOADING_APP_DATA');
+                    $scope.isDownloading = true;
+                    $scope.status = $filter('translate')('DOWNLOADING_APP_DATA');
 
-                //Start update 
-                downloader = updater.download(info.manifest, function (error, filename) {
-                    console.log(error);
-                    if (!error) {
-                        $scope.$apply(function () {
-                            $scope.isDownloading = false;
-                            $scope.status = '<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;' + $filter('translate')('UNPACKAGING_APP_DATA');
-                        });
-
-                        //Unzip
-                        updater.unpack(filename, function (error, path) {
+                    //Start update 
+                    downloader = updater.download(info.manifest, function (error, filename) {
+                        console.log(error);
+                        if (!error) {
                             $scope.$apply(function () {
-                                $scope.status = '<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;' + $filter('translate')('COPYING_FILES');
+                                $scope.isDownloading = false;
+                                $scope.status = '<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;' + $filter('translate')('UNPACKAGING_APP_DATA');
                             });
 
-                            //Copy new file to the current app folder
-                            updater.patch(path).then(function () {
-                                win.reloadDev();
-                            },
-                                function (error) {
-                                    console.log(error);
+                            //Unzip
+                            updater.unpack(filename, function (error, path) {
+                                $scope.$apply(function () {
+                                    $scope.status = '<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;' + $filter('translate')('COPYING_FILES');
                                 });
-                        });
-                    }
-                });
 
-                //Get download length
-                downloader.on('response', function (response) {
-                    $scope.max = (downloader['content-length']);
-                });
-
-                downloader.on('data', function (chunk) {
-                    $scope.$apply(function () {
-                        $scope.loaded += chunk.length;
-                        console.log($scope.loaded);
-                        $scope.percentage = ($scope.loaded * 100 / $scope.max);
+                                //Copy new file to the current app folder
+                                updater.patch(path).then(function () {
+                                        win.reloadDev();
+                                    },
+                                    function (error) {
+                                        console.log(error);
+                                    });
+                            });
+                        }
                     });
-                });
+
+                    //Get download length
+                    downloader.on('response', function (response) {
+                        $scope.max = (downloader['content-length']);
+                    });
+
+                    downloader.on('data', function (chunk) {
+                        $scope.$apply(function () {
+                            $scope.loaded += chunk.length;
+                            console.log($scope.loaded);
+                            $scope.percentage = ($scope.loaded * 100 / $scope.max);
+                        });
+                    });
+                }
             }
-        }
-    },
+        },
         function (error) {
             console.log(error);
         });

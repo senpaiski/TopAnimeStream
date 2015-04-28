@@ -109,6 +109,8 @@
         position: absolute;
         top: -26px;
         right: -4px;
+        color: white;
+        font-weight: bold;
     }
     .vjs-default-skin .vjs-language-button:before {
         font-family: FontAwesome;
@@ -156,6 +158,13 @@
         white-space: nowrap;
         overflow: hidden;
     }
+    .blue-header {
+        padding: 15px;
+        font-size: 15px;
+    }
+    .div-fullscreen {
+        top: 0 !important;
+    }
 </style>
 <div style=" background-color: rgb(10, 31, 39); position: absolute; top: 0; left: 0;  width: 100%; height: 100%;"></div>
 <div class="back" style="background: url('http://www.topanimestream.com/ImageHost/{{anime.BackdropPath}}') no-repeat center center;-webkit-background-size: cover; opacity:0.05"></div>
@@ -169,16 +178,22 @@
             </li>
             <li>{{anime.OriginalName}}&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-star"></i>&nbsp;&nbsp;{{anime.Rating}}&nbsp;/&nbsp;10&nbsp&nbsp;•&nbsp;&nbsp;<i class="fa fa-users"></i>&nbsp;&nbsp;{{anime.VoteCount}}</li>
         </ul>
-        <div class="pull-right" ng-click="" style="cursor:pointer;"><i class="fa fa-globe"></i>&nbsp;&nbsp;Encyclopedia</div>
+        <div class="pull-right" ng-click="browser.open(getAnimeUrl());" style="cursor:pointer;"><i class="fa fa-globe"></i>&nbsp;&nbsp;Website link</div>
         <div class="clearfix"></div>
     </div>
     <div style="margin-left:20px; top:100px; position:fixed;">
         <div style="width:160px;">
             <div style="height:210px; width:160px; overflow:hidden; border-radius:3px; position:relative; background: url('{{anime.PosterPath.formatPosterPath(300)}}') center center no-repeat; background-size:cover;  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);">
             </div>
+            <h4 style="border-bottom:thin dashed rgba(0, 0, 0, 0.29); padding-bottom:10px;">{{anime.OriginalName}}</h4>
             <ul class="list-unstyled">
-                <li>
-                    <h4>{{anime.OriginalName}}</h4>
+                <li ng-show="anime.AgeRating">
+                    <div style="margin-bottom:3px;">Age rating</div>
+                    <div style="color:#a5a5a5; font-size:12px;">{{anime.AgeRating.Name}} | {{anime.AgeRating.Description}}</div>
+                </li>
+                <li ng-show="anime.Status" style="margin-top:8px;">
+                    <div style="margin-bottom:3px;">Status</div>
+                    <div style="color:#a5a5a5; font-size:12px;">{{anime.Status.Name}}</div>
                 </li>
             </ul>
         </div>
@@ -278,35 +293,19 @@
                 <div ng-show="episodes.length == 0 && episodesBusy == false">No episodes available to watch.</div>
                 <ul class="list-unstyled" style="margin-top:20px;">
                     <li ng-repeat="episode in episodes" class="hvr-wobble-horizontal" style="margin:20px 0; display:block;">
-                        <div ng-click="selectEpisode(episode)" style="cursor:pointer;">
-                            <div style="height:55px; width:85px; overflow:hidden; position:relative; background: url('{{episode.Screenshot.formatPosterPath(300)}}') center center no-repeat; background-size:cover; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);" class="pull-left">
+                        <div ng-click="playEpisode(episode);" style="cursor:pointer;">
+                            <div style="height:55px; width:85px; overflow:hidden; position:relative; background: url('{{episode.ScreenshotHD.formatPosterPath(300)}}') center center no-repeat; background-size:cover; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);" class="pull-left">
                             </div>
                             <div style="padding-left:100px;">
-                                <h4 style="margin:0;">Episode {{episode.EpisodeNumber}} - {{episode.getEpisodeInformation().EpisodeName}}&nbsp;<small style="color:#bfbfbf">{{episode.AiredDate  | date:'mediumDate'}}</small></h4>
-                                <p ng-bind="episode.getEpisodeInformation().getOverview()" style="max-height:105px; overflow:hidden; color:#959595;"></p>
+                                <h4 style="margin:0;">Episode {{episode.EpisodeNumber}} - {{episode.getEpisodeInformation().EpisodeName}}</h4>
+                                <div style="color:#bfbfbf">{{episode.AiredDate | date:'mediumDate'}}</div>
+                                <!--<p ng-bind="episode.getEpisodeInformation().getOverview()" style="max-height:105px; overflow:hidden; color:#959595;"></p>-->
                             </div>
                             <div class="clearfix"></div>
                         </div>
                     </li>
                 </ul>
             </div>
-        </div>
-    </div>
-    <div style="position: fixed;height: 100px;width: 100%; bottom:0;background-color:rgb(4, 19, 26); box-shadow: rgba(0, 0, 0, 0.49) 0px 0px 5px 1px;
-border-top: thin solid #030E14;" ng-show="episodes.length > 0">
-        <div style="margin-left:200px; margin-top:23px;">
-            <div>
-                <div style="height:55px; width:85px; overflow:hidden; position:relative; background: url('{{selectedEpisode.Screenshot.formatPosterPath(300)}}') center center no-repeat; background-size:cover; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);" class="pull-left"></div>
-                <div style="padding-left:100px;">
-                    <div class="pull-left">
-                        <h4 style="margin:0;">Watch Episode {{selectedEpisode.EpisodeNumber}} - {{selectedEpisode.getEpisodeInformation().EpisodeName}}</h4>
-                        <div style="color:#bfbfbf; margin-top:5px;">{{selectedEpisode.AiredDate | date:'mediumDate'}}</div>
-                    </div>
-                    <button type="button" class="btn btn-success btn-lg pull-right hvr-pulse" style="margin-right:20px;" ng-click="playEpisode(selectedEpisode);">{{ "PLAY" | translate }}</button>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-
         </div>
     </div>
     <div style="position: fixed;height: 100px;width: 100%; bottom:0;background-color:rgb(4, 19, 26); box-shadow: rgba(0, 0, 0, 0.49) 0px 0px 5px 1px;

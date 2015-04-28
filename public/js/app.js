@@ -20,8 +20,6 @@ aniApp.config(function ($translateProvider) {
     $translateProvider.translations('es', es);
 
     //Set default language
-    //Set default language
-    //Set default language
     $translateProvider.preferredLanguage('en');
 });
 

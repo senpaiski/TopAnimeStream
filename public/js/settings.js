@@ -4,9 +4,10 @@ aniApp.factory('settings', function ($translate) {
     var settings = {};
 
     settings.defaults = {
-        defaultLanguage: 'en',
-        useSecureConnection: false,
-        languageMatch: false
+        applicationLanguage: 'en',
+        preferredVideoQuality: 1080,
+        preferredAudioLanguage: 'en',
+        preferredSubtitleLanguage: 'en'
     }
 
     if (fs.existsSync(path)) {
@@ -16,15 +17,26 @@ aniApp.factory('settings', function ($translate) {
         settings.data = settings.defaults;
     }
     
+    settings.changeVideoQuality = function (quality) {
+        settings.data.preferredVideoQuality = quality;
+    }
+        
+    settings.changeSubtitleLanguage = function (lang) {
+        settings.data.preferredSubtitleLanguage = lang;
+    }
+    
+    settings.changeAudioLanguage = function (lang) {
+        settings.data.preferredAudioLanguage = lang;
+    }
+    
     settings.switchLanguage = function (lang) {
         $translate.use(lang);
-        settings.data.defaultLanguage = lang;
+        settings.data.applicationLanguage = lang;
     }
 
     settings.save = function () {
         fs.writeFileSync(path, JSON.stringify(settings.data, null, "\t"));
     }
 
-    console.log(settings);
     return settings;
 });

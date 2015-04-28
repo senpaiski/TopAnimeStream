@@ -56,9 +56,9 @@
         <ul class="list-unstyled">
             <li ng-repeat="link in links">
                 <a ng-href="#/detail/{{anime.AnimeId}}" title="{{anime.OriginalName}}">
-                    <div ng-show="link.Episode == null" style="background: url('{{link.Anime.BackdropPath.formatPosterPath(92)}}') center center no-repeat;" class="pull-left img">
+                    <div ng-show="link.Episode == null" style="background: url('{{link.Anime.BackdropPath.formatPosterPath(154)}}') center center no-repeat;" class="pull-left img">
                     </div>
-                    <div ng-show="link.Episode != null" style="background: url('{{link.Episode.Screenshot.formatPosterPath(92)}}') center center no-repeat;" class="pull-left img">
+                    <div ng-show="link.Episode != null" style="background: url('{{link.Episode.ScreenshotHD.formatPosterPath(154)}}') center center no-repeat;" class="pull-left img">
                     </div>
                     <div class="body-text">
                         <h4>{{link.Anime.OriginalName}}&nbsp;<small style="color:#e0e0e0" am-time-ago="link.AddedDate"></small></h4>

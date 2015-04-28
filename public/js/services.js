@@ -25,6 +25,7 @@ aniApp.config(['$httpProvider',
         });
 }]);
 
+//Account functions
 aniApp.factory('account', function ($q, aniFactory, aniDataFactory) {
     var account = {};
 
@@ -87,10 +88,55 @@ aniApp.factory('account', function ($q, aniFactory, aniDataFactory) {
     return account;
 });
 
+//Helper functions
+aniApp.factory('helper', function () {
+
+    var helper = {};
+    helper.getLanguageName = function (lang) {
+        switch (lang) {
+        case "en":
+            return "English";
+        case "fr":
+            return "French";
+        case "es":
+            return "Spanish";
+        case "ja":
+            return "Japanese";
+        default:
+            return "None";
+        }
+    }
+
+    helper.getFlag = function (lang) {
+        switch (lang) {
+        case "en":
+            return "famfamfam-flag-us";
+        case "fr":
+            return "famfamfam-flag-fr";
+        case "es":
+            return "famfamfam-flag-es";
+        case "ja":
+            return "famfamfam-flag-jp";
+        default:
+            return "";
+        }
+    }
+
+    helper.encodeUrl = function (url) {
+        url = url.trim().toLowerCase();
+        url = url.split("&").join("and");
+        url = url.split(" ").join("-");
+        url = url.replace(/[^-A-Za-z0-9]/gi, "");
+        return url;
+    }
+
+    return helper;
+});
+
 //AnimeDataService API
 aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCacheFactory) {
     var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeDataService.svc',
-    //var baseUrl = 'http://localhost:3772/AnimeDataService.svc',
+        //var baseUrl = 'http://localhost:3772/AnimeDataService.svc',
         dataFactory = {};
 
     //Prepare caching for better user experience
@@ -158,7 +204,7 @@ aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCac
 
         $http.get(baseUrl + query)
             .success(function (d) {
-            console.log(d);
+                console.log(d);
                 deferred.resolve(d);
             })
             .error(function (error) {
@@ -214,7 +260,7 @@ aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCac
     }
 
     dataFactory.getAnimeDetail = function (animeId) {
-        var promise = $http.get(baseUrl + '/Animes(' + animeId + ')?$format=json&$expand=AnimeSources/Mirrors,Episodes/Mirrors,AnimeInformations,Genres,Themes')
+        var promise = $http.get(baseUrl + '/Animes(' + animeId + ')?$format=json&$expand=AnimeSources/Mirrors,Episodes/Mirrors,AnimeInformations,Genres,Themes,AgeRating,Status')
             .success(function (data) {
                 return data;
             })
@@ -371,7 +417,7 @@ aniApp.factory('aniDataFactory', function ($http, $sce, $cacheFactory, $q, DSCac
     dataFactory.getAvailableEpisodes = function (animeId, skip, top) {
         var deferred = $q.defer(),
             dataCache = DSCacheFactory.get('dataCache');
-        var query = baseUrl + '/Episodes()?$filter=AnimeId%20eq%20' + animeId + '%20and%20Links/any(l:cast(l/LinkId,%27Edm.Int32%27)%20ne%20null)&$expand=EpisodeInformations&$inlinecount=allpages&$format=json&$skip=' + skip + '&$top=' + top;
+        var query = baseUrl + '/Episodes()?$filter=AnimeId%20eq%20' + animeId + '%20and%20Links/any(l:cast(l/LinkId,%27Edm.Int32%27)%20ne%20null)&$expand=EpisodeInformations&$inlinecount=allpages&$format=json&$orderby=Order&$skip=' + skip + '&$top=' + top;
 
         if (dataCache.get(query)) {
             console.log('from cache');
@@ -582,7 +628,7 @@ aniApp.factory('aniFactory', function ($http, $translate, $q) {
         Proxy = require('wcf.js').Proxy;
 
     var baseUrl = 'http://www.topanimestream.com/AnimeServices/AnimeService.svc',
-    //var baseUrl = 'http://localhost:3772/AnimeService.svc',
+        //var baseUrl = 'http://localhost:3772/AnimeService.svc',
         baseInterface = 'http://tempuri.org/IAnimeService',
         envelope = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Header><Lang>{0}</Lang><Authentication>{1}</Authentication></s:Header><s:Body>{2}</s:Body></s:Envelope>',
         binding = new BasicHttpBinding({
@@ -634,7 +680,7 @@ aniApp.factory('aniFactory', function ($http, $translate, $q) {
         } else {
             message = '<MarkWatch xmlns="http://tempuri.org/"><animeId>' + animeId + '</animeId><time>' + time + '</time><duration>' + duration + '</duration><isComplete>' + isComplete + '</isComplete></MarkWatch>';
         }
-      
+
         var deferred = $q.defer();
 
         //Send markWatch

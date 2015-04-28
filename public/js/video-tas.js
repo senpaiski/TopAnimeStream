@@ -127,6 +127,10 @@
     /******************************************/
 
     videojs.LanguageMenuItem = videojs.MenuItem.extend({
+        // Call variable to prevent the resolution change from being called twice
+        call_count: 0,
+
+        /** @constructor */
         init: function (player, options) {
             // Modify options for parent MenuItem class's init.
             options.label = options.lang;
@@ -135,7 +139,7 @@
             videojs.MenuItem.call(this, player, options);
 
             // Store the quality as a property
-            this.language = options.lang;
+            this.language = options.lang.toLowerCase();
 
             // Register our click and tap handlers
             this.on(['click', 'tap'], this.onClick);
@@ -147,13 +151,25 @@
                 } else {
                     this.selected(false);
                 }
+
+                // Reset the call count
+                this.call_count = 0;
             }));
         }
     });
 
     // Handle click on language menu item
     videojs.LanguageMenuItem.prototype.onClick = function () {
+        // Check if this has already been called
+        if (this.call_count > 0) {
+            return;
+        }
+
+        // Change language
         this.player().changeLanguage(this.language);
+
+        // Increment the call counter
+        this.call_count++;
     };
 
     videojs.LanguageSelector = videojs.MenuButton.extend({
@@ -204,6 +220,11 @@
 
     // Define quality menu item
     videojs.QualityMenuItem = videojs.MenuItem.extend({
+
+        // Call variable to prevent the resolution change from being called twice
+        call_count: 0,
+
+        /** @constructor */
         init: function (player, options) {
             // Modify options for parent MenuItem class's init.
             options.label = options.quality + "p";
@@ -225,13 +246,26 @@
                 } else {
                     this.selected(false);
                 }
+
+                // Reset the call count
+                this.call_count = 0;
             }));
         }
     });
 
     // Handle click on quality menu item
     videojs.QualityMenuItem.prototype.onClick = function () {
+
+        // Check if this has already been called
+        if (this.call_count > 0) {
+            return;
+        }
+
+        // Change quality
         this.player().changeQuality(this.quality);
+
+        // Increment the call counter
+        this.call_count++;
     };
 
     // Define quality selector button
@@ -268,7 +302,7 @@
                 continue;
 
             items.push(new videojs.QualityMenuItem(this.player(), {
-                quality: source.Quality.replace('p', '')
+                quality: source.Quality
             }));
 
             qualities.push(source.Quality);
@@ -299,12 +333,15 @@
 
         //Define player object
         var player = this.player();
-        console.log(options.anime);
-        // Get options values (name, episodeList)
+        player.options()['trackTimeOffset'] = -3.18; //Because of TopAnimeStream video presentation
+
+        // Get options values and assing to player (name, episodeList)
         player.anime = options.anime;
         player.episodeList = options.episodeList;
         player.currentEpisode = options.currentEpisode;
         player.aniDataService = options.aniDataService;
+        player.preferedLanguage = options.preferedLanguage;
+        player.preferedQuality = options.preferedQuality;
 
         player.buildVideoName = function () {
             var player = this;
@@ -329,30 +366,32 @@
 
                 //Get subtitles
                 service.getSubtitles(animeId, episodeId).then(function (subData) {
-                    var subtitles = subData.value,
-                        tracks = player.remoteTextTracks().tracks_;
-    
-                    //Clear any previous text tracks (subtitles)
-                    for(var i = 0; i < tracks.length; i++) {
+                    var subtitles = subData.value
+                        // tracks = player.remoteTextTracks().tracks_;
+
+                    /*                //Clear any previous text tracks (subtitles)
+                    for (var i = 0; i < tracks.length; i++) {
                         player.removeRemoteTextTrack(tracks[i]);
-                                   console.log('Delete ' + tracks[i]);
-                    }
-                    
+                        console.log('Delete ' + tracks[i]);
+                    }*/
+
                     //Add subtitles
-                    for(var i = 0; i < subtitles.length; i++) {  
+                    for (var i = 0; i < subtitles.length; i++) {
                         var sub = subtitles[i];
-                        
+
                         //add new text tracks
                         var options = {
                             kind: 'subtitles',
                             label: sub.Language.Name + " " + sub.Specification,
                             srclang: sub.Language.ISO639,
-                            src: 'http://www.topanimestream.com/SubHost/' + sub.RelativeUrl
+                            //src: 'http://www.topanimestream.com/SubHost/' + sub.RelativeUrl
+                            src: '/subs/The_Devil_Is_a_PartTimer_1_en.srt'
+                            //src: '/subs/The_Devil_Is_a_PartTimer_1_en.vtt'
                         };
-                        
-                        player.addRemoteTextTrack(options);
+
+                        //player.addRemoteTextTrack(options);
                     }
-                    
+
                     return callback();
                 });
 
@@ -384,7 +423,7 @@
 
             for (var i = 0; i < sources.length; i++) {
                 var source = sources[i];
-                if (source.Quality.replace('p', '') == quality && source.Link.Language.Name.toLowerCase() == this.currentLanguage.toLowerCase()) {
+                if (source.Quality == quality && source.Link.Language.Name.toLowerCase() == this.currentLanguage.toLowerCase()) {
                     // Assign new source and change source
                     this.changeSource(source.Url, true);
 
@@ -404,7 +443,7 @@
 
             for (var i = 0; i < sources.length; i++) {
                 var source = sources[i];
-                if (source.Quality.replace('p', '') == this.currentQuality && source.Link.Language.Name.toLowerCase() == lang.toLowerCase()) {
+                if (source.Quality == this.currentQuality && source.Link.Language.Name.toLowerCase() == lang.toLowerCase()) {
                     // Assign new source
                     this.changeSource(source.Url, true);
 
@@ -419,32 +458,70 @@
             }
         }
 
-        // Assign prefered language or default
-        if (options.preferedLanguage !== undefined) {
-            player.currentLanguage = options.preferedLanguage;
-        } else {
-            player.currentLanguage = "japanese";
-        }
-
-        // Assign prefered quality or default
-        if (options.preferedQuality !== undefined) {
-            player.currentQuality = options.preferedQuality;
-        } else {
-            player.currentQuality = 360;
-        }
-
-        player.start = function () {
+        player.start = function (keepCurrentSettings) {
             var player = this,
                 subtitles = player.subtitles,
                 sources = player.sources;
 
+            if (!keepCurrentSettings) {
+                //Check if preferedLanguage is avaialble
+                var languageFound = false;
+                if (player.preferedLanguage) {
+                    for (var i = 0; i < sources.length; i++) {
+                        var source = sources[i];
+                        var language = source.Link.Language.Name.toLowerCase();
+                        if (language == player.preferedLanguage.toLowerCase()) {
+                            //Save current language
+                            player.currentLanguage = language;
+
+                            // Update the classes to reflect the currently selected language
+                            this.trigger('changeLanguage');
+
+                            languageFound = true;
+                            break;
+                        }
+                    }
+                }
+
+                //If no prefered language was available than we select the first one in the list
+                if (!languageFound) {
+                    player.currentLanguage = sources[0].Link.Language.Name.toLowerCase();
+                }
+
+                var qualityFound = false;
+                //Check if preferedQuality is available   
+                for (var i = 0; i < sources.length; i++) {
+                    var source = sources[i];
+                    var quality = source.Quality;
+
+                    if (quality == player.preferedQuality) {
+                        //Save current quality
+                        player.currentQuality = quality;
+
+                        // Update the classes to reflect the currently selected quality
+                        this.trigger('changeQuality');
+
+                        qualityFound = true;
+                        break;
+                    }
+                }
+
+                //If no prefered quality was available than we select the highest in the list (1080, 720, 360) etc...
+                if (!qualityFound) {
+                    var highestSource = sources.sort(function (a, b) {
+                        return b.Quality - a.Quality;
+                    })[0];
+
+                    this.currentQuality = highestSource.Quality;
+                }
+            }
+
+            //Start video
             for (var i = 0; i < sources.length; i++) {
                 var source = sources[i];
-                var language = source.Link.Language.Name;
-                var quality = source.Quality.replace('p', '');
+                var quality = source.Quality;
+                var language = source.Link.Language.Name.toLowerCase();
 
-                console.log(quality + " - " + player.currentQuality);
-                console.log(language + " - " + player.currentLanguage);
                 if (quality == player.currentQuality && language.toLowerCase() == player.currentLanguage.toLowerCase()) {
                     //Change source
                     player.changeSource(source.Url, false);
@@ -460,8 +537,7 @@
                 player.buildVideoName();
                 // Update the classes to reflect the currently selected episode
                 player.trigger('changeEpisode');
-
-                player.start();
+                player.start(true);
             });
         }
 
@@ -469,14 +545,14 @@
         if (player.currentEpisode !== undefined) {
             player.loadTAS(options.anime.AnimeId, options.currentEpisode.EpisodeId, function () {
                 player.buildVideoName();
+                player.start(false);
                 loadControlBar(player, options);
-                player.start();
             });
         } else {
             player.loadTAS(options.anime.AnimeId, null, function () {
                 player.buildVideoName();
+                player.start(false);
                 loadControlBar(player, options);
-                player.start();
             });
         }
     };

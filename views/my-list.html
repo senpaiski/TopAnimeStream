@@ -57,7 +57,7 @@
         <div style="color:#898989; margin:10px;" ng-show="videosBusy == true"><i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;Loading</div>
         <div style="color:#898989; margin:10px;" ng-show="watchedVideos.length == 0 && videosBusy == false">You did not watch anything yet.</div>
         <ul class="list-unstyled">
-            <li ng-repeat="watch in watchedVideos">
+            <li ng-repeat="watch in watchedVideos" style="height: 75px;">
                 <div style="cursor:pointer;">
                     <div ng-show="watch.Episode == null" style="background: url('{{watch.Anime.BackdropPath.formatPosterPath(92)}}') center center no-repeat; background-size:cover;" class="pull-left img">
                     </div>
@@ -67,7 +67,7 @@
                             You watched the movie <span am-time-ago="watch.AddedDate"></span>
                         </p>
                     </div>
-                    <div ng-show="watch.Episode !== null" style="background: url('{{watch.Episode.Screenshot.formatPosterPath(92)}}') center center no-repeat; background-size:cover;" class="pull-left img">
+                    <div ng-show="watch.Episode !== null" style="background: url('{{watch.Episode.ScreenshotHD.formatPosterPath(154)}}') center center no-repeat; background-size:cover;" class="pull-left img">
                     </div>
                     <div class="body-text" ng-show="watch.Episode !== null">
                         <h4 style="color:#ededed; font-size:13px;">{{watch.Anime.OriginalName}}&nbsp;-&nbsp;Ep {{watch.Episode.EpisodeNumber}}</h4>
@@ -85,7 +85,7 @@
             <div style="color:#898989; display:none;">You don't have any continious episode to watch or your account is not premium.</div>
             <ul id="watching" class="list-unstyled">
                 <li ng-repeat="watch in watchedVideos">
-                    <div style="width:250px; position:relative; height:150px; margin-right:10px; overflow:hidden; background: url('      https://lh5.googleusercontent.com/-G0Xd8o-2OGM/VR_QVv7fM3I/AAAAAAAAAZE/vaI_0IDWM8I/s288/%25255BCBM%25255D_Psycho-Pass_-_01_-_Crime_Coefficient_%25255B1080p-AC3%25255D_%25255BAF6D4363%25255D.mkv.png') center center no-repeat; background-size:cover; float:left; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);">
+                    <div style="width:250px; position:relative; height:150px; margin-right:10px; overflow:hidden; background: url('{{watch.Episode.Links[0].Thumbnail}}') center center no-repeat; background-size:cover; float:left; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);">
                         <div class="body-text">
                             <div class="time pull-right">{{watch.Time}}</div>
                             <div style="width:90%;" class="time-line"></div>

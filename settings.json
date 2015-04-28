@@ -1,5 +1,6 @@
 {
-	"defaultLanguage": "en",
-	"useSecureConnection": false,
-	"languageMatch": false
+	"applicationLanguage": "en",
+	"preferredVideoQuality": 720,
+	"preferredAudioLanguage": "ja",
+	"preferredSubtitleLanguage": "none"
 }

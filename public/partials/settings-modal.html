@@ -11,18 +11,18 @@
         <p style="font-size:12px;" class="text-muted">Automatically select the preferred video quality when possible. If a video file has multiple video quality available, your preferred quality will be selected even if it is not the first quality in the video.</p>
         <div class="dropdown" style="margin-top:5px;">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                720p
+                {{settings.preferredVideoQuality}}p
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                 <li>
-                    <a ng-click="">1080p</a>
+                    <a ng-click="changeVideoQuality(1080);">1080p</a>
                 </li>
                 <li>
-                    <a ng-click="">720p</a>
+                    <a ng-click="changeVideoQuality(720);">720p</a>
                 </li>
                 <li>
-                    <a ng-click="">360p</a>
+                    <a ng-click="changeVideoQuality(360);">360p</a>
                 </li>
             </ul>
         </div>
@@ -33,15 +33,15 @@
         <p style="font-size:12px;" class="text-muted">Automatically select audio tracks in your preferred language when possible. If a video file has multiple audio tracks, a track whose language matches your preferred language will be selected even if it is not the first audio track.</p>
         <div class="dropdown" style="margin-top:5px;">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                <i class="famfamfam-flag-jp"></i>&nbsp;&nbsp;Japanese
+                <i class="{{getFlag(settings.preferredAudioLanguage)}}"></i>&nbsp;&nbsp;{{getLanguageName(settings.preferredAudioLanguage)}}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                 <li ng-class="">
-                    <a ng-click="switchLanguage('jp')"><i class="famfamfam-flag-jp"></i>&nbsp;&nbsp;Japanese</a>
+                    <a ng-click="changeAudioLanguage('ja')"><i class="famfamfam-flag-jp"></i>&nbsp;&nbsp;Japanese</a>
                 </li>
                 <li ng-class="">
-                    <a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
+                    <a ng-click="changeAudioLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
                 </li>
 
             </ul>
@@ -53,15 +53,15 @@
         <p style="font-size:12px;" class="text-muted">Automatically select the subtitle in your preferred language when possible. If you select 'None' the player will never use subtitles.</p>
         <div class="dropdown" style="margin-top:5px;">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                None
+                <i class="{{getFlag(settings.preferredSubtitleLanguage)}}"></i>&nbsp;&nbsp;{{getLanguageName(settings.preferredSubtitleLanguage)}}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                 <li ng-class="">
-                    <a ng-click="switchLanguage('none')">None</a>
+                    <a ng-click="changeSubtitleLanguage('none')">None</a>
                 </li>
                 <li ng-class="">
-                    <a ng-click="switchLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
+                    <a ng-click="changeSubtitleLanguage('en')"><i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English</a>
                 </li>
 
             </ul>
@@ -73,7 +73,7 @@
         <p style="font-size:12px;" class="text-muted">Change the language of the application.</p>
         <div class="dropdown" style="margin-top:5px;">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                <i class="famfamfam-flag-us"></i>&nbsp;&nbsp;English
+                <i class="famfamfam-flag-us"></i>&nbsp;&nbsp;{{getLanguageName(settings.applicationLanguage)}}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">

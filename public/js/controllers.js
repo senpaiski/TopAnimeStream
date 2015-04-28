@@ -83,7 +83,7 @@ aniApp.controller('Toolbar', function ($rootScope, $scope, $modal, $translate, $
     };
 
     $scope.toggleFullscreen = function () {
-        Window.toggleKioskMode();
+        Window.toggleFullscreen();
     };
 
     $scope.close = function () {
@@ -313,11 +313,13 @@ aniApp.controller('FullList', function ($scope, aniDataFactory) {
 });
 
 //Detail
-aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, aniFactory, aniDataFactory, detail, $sce) {
+aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, Browser, Window, aniFactory, aniDataFactory, detail, $sce, settings, helper) {
+    $scope.browser = Browser; //This is use to redirect external url page
     $scope.episodes = [];
     $scope.totalAvailableEpisodes = 0;
     $scope.isPlayer = false;
     $scope.anime = detail.data;
+    console.log($scope.anime);
     $scope.sources = [];
     $scope.selectedEpisode = {};
     $scope.skip = 0;
@@ -335,6 +337,21 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
     $scope.closePlayer = function () {
         $scope.isPlayer = false;
         $scope.disposePlayer();
+
+        //Remove fullscreen style css if the player is currently fullscreen
+        setTimeout(function () {
+            if (Window.isFullscreen) {
+                Window.toggleFullscreen();
+                $("#div-player").removeClass("div-fullscreen");
+                $(".blue-header").removeClass("div-fullscreen");
+                $("#header").css("display", "block");
+                $(".video-js").removeClass("vjs-fullscreen");
+            }
+        }, 500);
+    }
+    
+    $scope.getAnimeUrl = function() {
+        return "http://www.topanimestream.com/en/anime/" + helper.encodeUrl($scope.anime.OriginalName) + "-" + $scope.anime.AnimeId + "/";
     }
 
     $scope.anime.getAnimeInformation = function () {
@@ -486,6 +503,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
         $scope.disposePlayer(); //Dispose player correctly
 
         document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'></video>";
+        //<track kind='subtitles' label='English' langsrc='en' src='/subs/The_Devil_Is_a_PartTimer_1_en.srt'></track>
         //Load videojs framework with quality selector plugin
         $scope.video = videojs('videojs-player', {
             plugins: {
@@ -494,9 +512,9 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                     "currentEpisode": $scope.selectedEpisode,
                     "aniDataService": aniDataFactory,
                     "episodeList": $scope.episodes,
-                    "preferedLanguage": "english",
-                    "preferedSubtitle": "none",
-                    "preferedQuality": 360
+                    "preferedLanguage": helper.getLanguageName(settings.data.preferredAudioLanguage),
+                    "preferedSubtitle": helper.getLanguageName(settings.data.preferredSubtitleLanguage),
+                    "preferedQuality": settings.data.preferredVideoQuality
                 }
             },
             controls: true,
@@ -504,10 +522,11 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
             preload: "auto",
             techOrder: ["html5"]
         });
-        
-  
-              //Test save watch time
-        aniFactory.markWatch($scope.anime.AnimeId, null, $scope.video.currentTime(), $scope.video.duration(), false);
+
+        $scope.addFullsreenEvent();
+
+        //Test save watch time
+        aniFactory.markWatch($scope.anime.AnimeId, $scope.selectedEpisode.EpisodeId, $scope.video.currentTime(), $scope.video.duration(), false);
     }
 
     $scope.playMovie = function () {
@@ -521,9 +540,9 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
                 tasPlugin: {
                     "anime": $scope.anime,
                     "aniDataService": aniDataFactory,
-                    "preferedLanguage": "english",
-                    "preferedSubtitle": "none",
-                    "preferedQuality": 718
+                    "preferedLanguage": helper.getLanguageName(settings.data.preferredAudioLanguage),
+                    "preferedSubtitle": helper.getLanguageName(settings.data.preferredSubtitleLanguage),
+                    "preferedQuality": settings.data.preferredVideoQuality
                 }
             },
             controls: true,
@@ -532,7 +551,31 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, a
             techOrder: ["html5"]
         });
 
+        $scope.addFullsreenEvent();
+    }
 
+    //Fix html5 fullscreen - node-webkit does not support the API
+    $scope.addFullsreenEvent = function () {
+        $('.vjs-fullscreen-control').click(function (e) {
+            //$scope.video.requestFullscreen(); //Not working in node-webkit 0.8.6
+
+            //Set fullscreen style css
+            if (Window.isFullscreen) {
+                $("#div-player").removeClass("div-fullscreen");
+                $(".blue-header").removeClass("div-fullscreen");
+                $("#header").css("display", "block");
+                $(".video-js").removeClass("vjs-fullscreen");
+            } else {
+                $("#div-player").addClass("div-fullscreen");
+                $(".blue-header").addClass("div-fullscreen");
+                $("#header").css("display", "none");
+                $(".video-js").addClass("vjs-fullscreen");
+            }
+
+            //Set app fullscreen
+            Window.toggleFullscreen();
+
+        });
     }
 });
 
@@ -737,32 +780,61 @@ aniApp.controller('Updater', function ($scope, $modalInstance, $sanitize, $filte
 });
 
 //Settings
-aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser, $translate, settings) {
+aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser, $translate, settings, helper) {
     var pkg = require('./package.json');
 
-    $scope.defaultLanguage = settings.data.defaultLanguage;
-    $scope.useSecureConnection = settings.data.useSecureConnection;
-    $scope.languageMatch = settings.data.languageMatch;
+    //Get registered data;
+    $scope.settings = settings.data;
 
+    //Get browser object functions
     $scope.browser = Browser;
+
+    //Get app version
     $scope.appVersion = pkg.version;
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     }
 
+    //Save setting to file
     $scope.saveChanges = function () {
-        settings.data.useSecureConnection = $scope.useSecureConnection;
-        settings.data.languageMatch = $scope.languageMatch;
-
         settings.save();
         $scope.cancel();
     }
 
-    $scope.switchLanguage = function (lang) {
-        settings.switchLanguage(lang);
+    //Change preferred audio language
+    $scope.changeAudioLanguage = function (lang) {
+        $scope.settings.preferredAudioLanguage = lang;
+        settings.changeAudioLanguage(lang);
     }
 
+    //Change preferred video quality
+    $scope.changeVideoQuality = function (quality) {
+        $scope.settings.preferredVideoQuality = quality;
+        settings.changeVideoQuality(quality);
+    }
+
+    //Change preferred subtitle language
+    $scope.changeSubtitleLanguage = function (lang) {
+        $scope.settings.preferredSubtitleLanguage = lang;
+        settings.changeSubtitleLanguage(lang);
+    }
+
+    //Change language
+    $scope.switchLanguage = function (lang) {
+        $scope.settings.applicationLanguage = lang;
+        settings.switchLanguage(lang);
+    }
+    
+    $scope.getLanguageName = function (lang) {
+       return helper.getLanguageName(lang);
+    }
+
+    $scope.getFlag = function (lang) {
+        return helper.getFlag(lang);
+    }
+
+    //Show release notes 
     $scope.showReleaseNotes = function () {
         var modalInstance = $modal.open({
             templateUrl: 'public/partials/release-notes-modal.html',

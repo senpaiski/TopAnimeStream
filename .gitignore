@@ -31,7 +31,7 @@ nwsnapshot.exe
 nw.pak
 libEGL.dll
 libGLESv2.dll
-icudtl.dll
+icudt.dll
 icudtl.dat
 ffmpegsumo.dll
 

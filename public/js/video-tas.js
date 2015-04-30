@@ -45,6 +45,10 @@
     });
 
     /******************************************/
+    /*            Subtitles                   */
+    /******************************************/
+
+    /******************************************/
     /*            Episode List Selector       */
     /******************************************/
 
@@ -214,6 +218,48 @@
         return items;
     };
 
+    videojs.LanguageSelector.prototype.reload = function () {
+        var children = this.children()[0].children(),
+            childCount = children.length,
+            sources = sources = this.player().sources,
+            languages = [];
+
+        //Remove all children
+        for (var i = 0; i < childCount; i++) {
+            this.player().controlBar.languageButton.children()[0].removeChild(children[0]);
+        }
+
+        //Add title again
+        var title = new videojs.TitleMenutItem(this.player(), {
+            el: videojs.Component.prototype.createEl('li', {
+                className: 'vjs-menu-title vjs-res-menu-title',
+                innerHTML: 'Audio'
+            })
+        });
+
+        //Insert to player
+        this.player().controlBar.languageButton.menu.addItem(title);
+
+        //Add quality menu items to list
+        for (var i = 0; i < sources.length; i++) {
+            var source = sources[i];
+
+            //Avoid duplicate language
+            if (languages.indexOf(source.Link.Language.Name) !== -1)
+                continue;
+
+            //Add language item to list
+            var divLang = new videojs.LanguageMenuItem(this.player(), {
+                lang: source.Link.Language.Name
+            });
+
+            this.player().controlBar.languageButton.menu.addItem(divLang);
+
+            //Save language in temporary array. This will help checking duplicates
+            languages.push(source.Link.Language.Name);
+        }
+    }
+
     /******************************************/
     /*            Quality Selector            */
     /******************************************/
@@ -320,6 +366,52 @@
         return items;
     };
 
+    videojs.QualitySelector.prototype.reload = function () {
+        var children = this.children()[0].children(),
+            childCount = children.length,
+            sources = sources = this.player().sources,
+            qualities = [];
+
+        // Sort the available qualities in DESC
+        sources.sort(function (a, b) {
+            return b.Quality - a.Quality;
+        });
+
+        //Remove all children
+        for (var i = 0; i < childCount; i++) {
+            this.player().controlBar.qualityButton.children()[0].removeChild(children[0]);
+        }
+
+        //Add title again
+        var title = new videojs.TitleMenutItem(this.player(), {
+            el: videojs.Component.prototype.createEl('li', {
+                className: 'vjs-menu-title vjs-res-menu-title',
+                innerHTML: 'Quality'
+            })
+        });
+
+        //Insert to player
+        this.player().controlBar.qualityButton.menu.addItem(title);
+
+        //Add quality menu items to list
+        for (var i = 0; i < sources.length; i++) {
+            var source = sources[i];
+
+            //Avoid duplicate quality
+            if (qualities.indexOf(source.Quality) !== -1)
+                continue;
+
+            var divQuality = new videojs.QualityMenuItem(this.player(), {
+                quality: source.Quality
+            });
+
+            this.player().controlBar.qualityButton.menu.addItem(divQuality);
+
+            qualities.push(source.Quality);
+        }
+    }
+
+
     /******************************************/
     /*          The Plugin Function           */
     /******************************************/
@@ -333,6 +425,7 @@
 
         //Define player object
         var player = this.player();
+        player.callCount = 0;
         player.options()['trackTimeOffset'] = -3.18; //Because of TopAnimeStream video presentation
 
         // Get options values and assing to player (name, episodeList)
@@ -348,7 +441,12 @@
 
             //Build & display video name
             if (player.currentEpisode !== undefined) {
-                player.videoName = "Episode " + player.currentEpisode.EpisodeNumber + " - " + player.currentEpisode.getEpisodeInformation().EpisodeName;
+                var episodeInformation = player.currentEpisode.getEpisodeInformation();
+                if (episodeInformation) {
+                    player.videoName = "Episode " + player.currentEpisode.EpisodeNumber + " - " + episodeInformation.EpisodeName;
+                } else {
+                    player.videoName = "Episode " + player.currentEpisode.EpisodeNumber;
+                }
             } else {
                 player.videoName = player.anime.OriginalName;
             }
@@ -369,11 +467,8 @@
                     var subtitles = subData.value
                         // tracks = player.remoteTextTracks().tracks_;
 
-                    /*                //Clear any previous text tracks (subtitles)
-                    for (var i = 0; i < tracks.length; i++) {
-                        player.removeRemoteTextTrack(tracks[i]);
-                        console.log('Delete ' + tracks[i]);
-                    }*/
+                    //Clear any previous text tracks (subtitles)
+                    player.clearTextTracks();
 
                     //Add subtitles
                     for (var i = 0; i < subtitles.length; i++) {
@@ -383,15 +478,18 @@
                         var options = {
                             kind: 'subtitles',
                             label: sub.Language.Name + " " + sub.Specification,
+                            language: sub.Language.ISO639,
                             srclang: sub.Language.ISO639,
-                            //src: 'http://www.topanimestream.com/SubHost/' + sub.RelativeUrl
-                            src: '/subs/The_Devil_Is_a_PartTimer_1_en.srt'
+                            src: 'http://www.topanimestream.com/SubHost/' + sub.RelativeUrl
+                            //src: '/subs/The_Devil_Is_a_PartTimer_1_en.srt'
                             //src: '/subs/The_Devil_Is_a_PartTimer_1_en.vtt'
                         };
 
-                        //player.addRemoteTextTrack(options);
-                    }
+                        var newTrack = player.addTextTrack(options.kind, options.label, options.srclang, options);
+                        player.showTextTrack(newTrack.id_, newTrack.kind_);
 
+                    }
+                    console.log(player);
                     return callback();
                 });
 
@@ -463,58 +561,68 @@
                 subtitles = player.subtitles,
                 sources = player.sources;
 
-            if (!keepCurrentSettings) {
-                //Check if preferedLanguage is avaialble
-                var languageFound = false;
-                if (player.preferedLanguage) {
-                    for (var i = 0; i < sources.length; i++) {
-                        var source = sources[i];
-                        var language = source.Link.Language.Name.toLowerCase();
-                        if (language == player.preferedLanguage.toLowerCase()) {
-                            //Save current language
-                            player.currentLanguage = language;
+            if (keepCurrentSettings) {
+                player.preferedLanguage = player.currentLanguage;
+                player.preferedQuality = player.currentQuality;
+            }
 
-                            // Update the classes to reflect the currently selected language
-                            this.trigger('changeLanguage');
-
-                            languageFound = true;
-                            break;
-                        }
-                    }
-                }
-
-                //If no prefered language was available than we select the first one in the list
-                if (!languageFound) {
-                    player.currentLanguage = sources[0].Link.Language.Name.toLowerCase();
-                }
-
-                var qualityFound = false;
-                //Check if preferedQuality is available   
+            //Check if preferedLanguage is avaialble
+            var languageFound = false;
+            if (player.preferedLanguage) {
                 for (var i = 0; i < sources.length; i++) {
                     var source = sources[i];
-                    var quality = source.Quality;
+                    var language = source.Link.Language.Name.toLowerCase();
+                    if (language == player.preferedLanguage.toLowerCase()) {
+                        //Save current language
+                        player.currentLanguage = language;
 
-                    if (quality == player.preferedQuality) {
-                        //Save current quality
-                        player.currentQuality = quality;
+                        // Update the classes to reflect the currently selected language
+                        this.trigger('changeLanguage');
 
-                        // Update the classes to reflect the currently selected quality
-                        this.trigger('changeQuality');
-
-                        qualityFound = true;
+                        languageFound = true;
                         break;
                     }
                 }
+            }
 
-                //If no prefered quality was available than we select the highest in the list (1080, 720, 360) etc...
-                if (!qualityFound) {
-                    var highestSource = sources.sort(function (a, b) {
-                        return b.Quality - a.Quality;
-                    })[0];
+            //If no prefered language was available than we select the first one in the list
+            if (!languageFound) {
+                player.currentLanguage = sources[0].Link.Language.Name.toLowerCase();
 
-                    this.currentQuality = highestSource.Quality;
+                // Update the classes to reflect the currently selected language
+                this.trigger('changeLanguage');
+            }
+
+            var qualityFound = false;
+            //Check if preferedQuality is available   
+            for (var i = 0; i < sources.length; i++) {
+                var source = sources[i];
+                var quality = source.Quality;
+
+                if (quality == player.preferedQuality) {
+                    //Save current quality
+                    player.currentQuality = quality;
+
+                    // Update the classes to reflect the currently selected quality
+                    this.trigger('changeQuality');
+
+                    qualityFound = true;
+                    break;
                 }
             }
+
+            //If no prefered quality was available than we select the highest in the list (1080, 720, 360) etc...
+            if (!qualityFound) {
+                var highestSource = sources.sort(function (a, b) {
+                    return b.Quality - a.Quality;
+                })[0];
+
+                this.currentQuality = highestSource.Quality;
+
+                // Update the classes to reflect the currently selected quality
+                this.trigger('changeQuality');
+            }
+
 
             //Start video
             for (var i = 0; i < sources.length; i++) {
@@ -532,13 +640,28 @@
 
         player.changeEpisode = function (episode) {
             var player = this;
+
+            // Check if this has already been called
+            if (player.callCount > 0) {
+                return;
+            }
+
             player.loadTAS(episode.AnimeId, episode.EpisodeId, function () {
                 player.currentEpisode = episode;
-                player.buildVideoName();
+                player.buildVideoName(); //Change video name
                 // Update the classes to reflect the currently selected episode
                 player.trigger('changeEpisode');
+
+                //Update language items (sometimes we have one episode in english and the rest in japanese)
+                player.controlBar.languageButton.reload();
+                player.controlBar.qualityButton.reload();
+
+                //Start the video with preferred settings
                 player.start(true);
+                player.callCount = 0;
             });
+
+            player.callCount++;
         }
 
         //Play video
@@ -564,15 +687,17 @@
         var nameComponent = new videojs.NameButton(player, options);
 
         // Now lets add it to the player.
-        var qualityButton = player.controlBar.addChild(qualityComponent);
-        var languageButton = player.controlBar.addChild(languageComponent);
-        var nameButton = player.controlBar.addChild(nameComponent);
+        player.controlBar.qualityButton = player.controlBar.addChild(qualityComponent);
+        player.controlBar.languageButton = player.controlBar.addChild(languageComponent);
+        player.controlBar.nameButton = player.controlBar.addChild(nameComponent);
 
         //If we have the episode list. Display it on the control bar
         if (player.episodeList !== undefined) {
             var episodeListComponent = new videojs.EpisodeListButton(player, options);
-            var episodeListButton = player.controlBar.addChild(episodeListComponent);
+            player.controlBar.episodeListButton = player.controlBar.addChild(episodeListComponent);
         }
+
+        console.log(player.controlBar);
     }
 
     //Register plugin to VideoJS

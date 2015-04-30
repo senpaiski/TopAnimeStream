@@ -165,6 +165,17 @@
     .div-fullscreen {
         top: 0 !important;
     }
+    /*TextTracks Cue*/
+    .vjs-text-track-display {
+        font-size: 18px;
+        margin: 15px;
+    }
+    .vjs-text-track {
+        background-color: transparent !important;
+    }
+    .vjs-tt-cue {
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    }
 </style>
 <div style=" background-color: rgb(10, 31, 39); position: absolute; top: 0; left: 0;  width: 100%; height: 100%;"></div>
 <div class="back" style="background: url('http://www.topanimestream.com/ImageHost/{{anime.BackdropPath}}') no-repeat center center;-webkit-background-size: cover; opacity:0.05"></div>
@@ -341,19 +352,6 @@ border-top: thin solid #030E14;" ng-show="anime.IsMovie && availableAudio.length
             </li>
         </ul>
     </div>
-    <!--<div style="background-color:rgba(0, 0, 0, 0.19); position:fixed; top:50px; bottom:0; padding-top:25px; overflow:overlay; width:250px;" ng-show="!anime.IsMovie">
-        <ul id="latest-list" class="list-unstyled" style="margin-top:10px;">
-            <li ng-repeat="episode in episodes" ng-class="{'active' : isSelectedEpisode(episode)}" ng-click="playEpisode(episode);" style="border-bottom:thin solid rgba(255, 255, 255, 0.1); cursor:pointer; padding:10px;">
-                <div style="color:#e0e0e0; height:55px;">
-                    <div style="height:55px; width:85px; overflow:hidden; position:relative; background: url('{{episode.Screenshot.formatPosterPath(300)}}') center center no-repeat; background-size:cover; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);" class="pull-left">
-                    </div>
-                    <div style="padding-left: 95px;">
-                        <h4 style="font-size:13px; margin:0; color:white;"> {{ "EPISODE" | translate }}&nbsp;{{episode.EpisodeNumber}}<br><small style="word-wrap: break-word;">{{episode.EpisodeInformations[0].EpisodeName.trimToLength(30)}}</small></h4>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>-->
     <div id="div-player">
         <div id="video-player">
         </div>

@@ -243,7 +243,7 @@ aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, an
             $scope.loginError = $filter('translate')('NO_INTERNET_ACCESS');
     });
 
-    //AnimeDataService
+    //Check if AnimeDataService is available at the moment
     aniDataFactory.isServiceOnline(function (online) {
         console.log('Is AnimeDataService online: ' + online);
         $scope.isServiceOnline = online;
@@ -252,7 +252,7 @@ aniApp.controller('Login', function ($rootScope, $scope, updater, aniFactory, an
             $scope.loginError = $filter('translate')('SERVICE_OFFLINE');
     });
 
-    //AnimeService (Profile)
+    //Check if AnimeService (Profile) is available at the moment
     aniFactory.isServiceOnline(function (online) {
         console.log('Is AnimeService online: ' + online);
         $scope.isServiceOnline = online;
@@ -349,8 +349,8 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, B
             }
         }, 500);
     }
-    
-    $scope.getAnimeUrl = function() {
+
+    $scope.getAnimeUrl = function () {
         return "http://www.topanimestream.com/en/anime/" + helper.encodeUrl($scope.anime.OriginalName) + "-" + $scope.anime.AnimeId + "/";
     }
 
@@ -493,17 +493,16 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, B
             setTimeout(function () {
                 $scope.video.dispose();
                 $scope.video = null;
-            }, 0);
+            }, 500);
         }
     }
 
     $scope.playEpisode = function (episode) {
         $scope.isPlayer = true;
         $scope.selectedEpisode = episode;
-        $scope.disposePlayer(); //Dispose player correctly
 
         document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'></video>";
-        //<track kind='subtitles' label='English' langsrc='en' src='/subs/The_Devil_Is_a_PartTimer_1_en.srt'></track>
+
         //Load videojs framework with quality selector plugin
         $scope.video = videojs('videojs-player', {
             plugins: {
@@ -531,7 +530,6 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, B
 
     $scope.playMovie = function () {
         $scope.isPlayer = true;
-        $scope.disposePlayer(); //Dispose player correctly
 
         document.getElementById('video-player').innerHTML = "<video id='videojs-player' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto'></video>";
         //Load videojs framework with quality selector plugin
@@ -825,9 +823,9 @@ aniApp.controller("Settings", function ($scope, $modal, $modalInstance, Browser,
         $scope.settings.applicationLanguage = lang;
         settings.switchLanguage(lang);
     }
-    
+
     $scope.getLanguageName = function (lang) {
-       return helper.getLanguageName(lang);
+        return helper.getLanguageName(lang);
     }
 
     $scope.getFlag = function (lang) {

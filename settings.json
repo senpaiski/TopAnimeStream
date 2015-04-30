@@ -1,6 +1,6 @@
 {
 	"applicationLanguage": "en",
-	"preferredVideoQuality": 720,
-	"preferredAudioLanguage": "ja",
+	"preferredVideoQuality": 1080,
+	"preferredAudioLanguage": "en",
 	"preferredSubtitleLanguage": "none"
 }

@@ -480,9 +480,8 @@
                             label: sub.Language.Name + " " + sub.Specification,
                             language: sub.Language.ISO639,
                             srclang: sub.Language.ISO639,
-                            src: 'http://www.topanimestream.com/SubHost/' + sub.RelativeUrl
-                            //src: '/subs/The_Devil_Is_a_PartTimer_1_en.srt'
-                            //src: '/subs/The_Devil_Is_a_PartTimer_1_en.vtt'
+                            src: 'http://www.topanimestream.com/SubHost/' + sub.RelativeUrl,
+                            charset: 'iso-8859-1'
                         };
 
                         var newTrack = player.addTextTrack(options.kind, options.label, options.srclang, options);

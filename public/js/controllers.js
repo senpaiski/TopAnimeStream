@@ -424,21 +424,7 @@ aniApp.controller('Detail', function ($scope, $routeParams, $modal, $location, B
                 var subs = data.value;
                 for (var i = 0; i < subs.length; i++) {
                     subs[i].getFlag = function () {
-                        switch (this.ISO639) {
-                        case "en":
-                            return "famfamfam-flag-us";
-                        case "fr":
-                            return "famfamfam-flag-fr";
-                        case "es":
-                            return "famfamfam-flag-es";
-                        case "ja":
-                            return "famfamfam-flag-jp";
-                        case "ro":
-                            return "famfamfam-flag-ro";
-                        }
-
-
-                        return "";
+                        return helper.getFlag(this.ISO639);
                     }
                 }
 

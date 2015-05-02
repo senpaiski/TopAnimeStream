@@ -1,6 +1,6 @@
 {
     "name": "TopAnimeStream",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Watch animes",
     "private": true,
     "main": "app://host/index.html",

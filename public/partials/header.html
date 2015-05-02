@@ -127,8 +127,7 @@
         <div class="navbar-right pull-right">
             <ul id="right-list" class="nav navbar-nav">
                 <li ng-hide="!isConnected">
-                    <img alt="" class="img-profile" ng-show="user.ProfilePic" ng-src="http://www.topanimestream.com/ImageHost/72/37/8/w92_jaski_profile_pic.jpg">
-                    <!--<img alt="" ng-show="user.ProfilePic" ng-src="{{user.ProfilePic.formatPosterPath(154)}}" style="max-height:50px;">-->
+                    <img alt="" ng-show="user.ProfilePic" class="img-profile" ng-src="{{user.ProfilePic.formatPosterPath(154)}}" style="max-height:25px;">
                     <img alt="" class="img-profile" ng-hide="user.ProfilePic" src="/public/img/default_profile.jpg">
                 </li>
                 <li ng-hide="!isConnected"><a ng-click="openFriendList();" class="dropdown-toggle">{{user.Username}}</a>

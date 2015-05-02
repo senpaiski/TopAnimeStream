@@ -1344,7 +1344,6 @@ vjs.get = function (url, onSuccess, onError, withCredentials) {
     }
 
     request = new XMLHttpRequest();
-
     urlInfo = vjs.parseUrl(url);
     winLoc = window.location;
     // check if url is for another domain/origin
@@ -1383,6 +1382,7 @@ vjs.get = function (url, onSuccess, onError, withCredentials) {
     try {
         // Third arg is async, or ignored by XDomainRequest
         request.open('GET', url, true);
+
         // withCredentials only supported by XMLHttpRequest2
         if (withCredentials) {
             request.withCredentials = true;

@@ -117,6 +117,18 @@ aniApp.factory('helper', function () {
             return "famfamfam-flag-es";
         case "ja":
             return "famfamfam-flag-jp";
+        case "dv":
+            return "famfamfam-flag-nl";
+        case "sv":
+            return "famfamfam-flag-se";
+        case "ro":
+            return "famfamfam-flag-ro";
+        case "pt":
+            return "famfamfam-flag-pt";
+        case "it":
+            return "famfamfam-flag-it";
+        case "de":
+            return "famfamfam-flag-de";
         default:
             return "";
         }

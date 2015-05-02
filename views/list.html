@@ -42,6 +42,11 @@ margin-left: 20px;" when-scrolled-down="loadMore()">
     <div style="margin-top:15px">
         <div ng-repeat="anime in animes" class="hvr-float" style="float:left; margin-right:10px;">
             <div class="float" style="max-width:120px; min-height:220px;">
+                <div ng-show="anime.StatusId == 64" style="position: absolute; background-color:rgba(0, 0, 0, 0.49);
+z-index: 1;
+
+padding: 5px; width:100%;">
+                <i class="fa fa-bolt" style="color: rgb(245, 245, 34);"></i>&nbsp;&nbsp;<span style="color:white;">Ongoing</span></div>
                 <a ng-href="#/detail/{{anime.AnimeId}}" style="text-decoration:none; color:#e0e0e0" title="{{anime.OriginalName}}">
                     <div style="height:170px; width:120px; overflow:hidden; border-radius:3px; position:relative; background: url('{{anime.PosterPath.formatPosterPath(300)}}') center center no-repeat; background-size:cover;" class="shadow">
                     </div>

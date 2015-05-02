@@ -56,12 +56,12 @@
         <ul class="list-unstyled">
             <li ng-repeat="link in links">
                 <a ng-href="#/detail/{{anime.AnimeId}}" title="{{anime.OriginalName}}">
-                    <div ng-show="link.Episode == null" style="background: url('{{link.Anime.BackdropPath.formatPosterPath(154)}}') center center no-repeat;" class="pull-left img">
+                    <div ng-show="link.Episode == null" style="background: url('{{link.Anime.BackdropPath.formatPosterPath(300)}}') center center no-repeat;" class="pull-left img">
                     </div>
-                    <div ng-show="link.Episode != null" style="background: url('{{link.Episode.ScreenshotHD.formatPosterPath(154)}}') center center no-repeat;" class="pull-left img">
+                    <div ng-show="link.Episode != null" style="background: url('{{link.Episode.ScreenshotHD.formatPosterPath(300)}}') center center no-repeat;" class="pull-left img">
                     </div>
                     <div class="body-text">
-                        <h4>{{link.Anime.OriginalName}}&nbsp;<small style="color:#e0e0e0" am-time-ago="link.AddedDate"></small></h4>
+                        <h4>{{link.Anime.OriginalName.substring(0, 30)}}&nbsp;<small style="color:#e0e0e0" am-time-ago="link.AddedDate"></small></h4>
                         <p ng-show="link.Episode != null">Episode {{link.Episode.EpisodeNumber}}</p>
                         <p ng-show="link.Episode == null">{{link.Language.Name}}</p>
                     </div>

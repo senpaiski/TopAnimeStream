@@ -1,14 +1,20 @@
 TopAnimeStream
 ========
-Currently in development! The app will only work for me since I did not update the TopAnimeStream service in production. 
-
-TopAnimeStream App stream anime from TopAnimeStream website.
+TopAnimeStream completely re-structured :D
 Works on major pc platform like Windows, Linux & Mac.
 
-TopAnimeStream App v.2 is currently in `development`
+TopAnimeStream App 1.0.0 is currently in `beta`
 
 ##New features
-- TODO
+- TopAnimeStream is working with a completly new high quality streaming service. (No more mirrors)
+- Choice of 360p to 1080p anime quality.
+- The app is now really working on Mac & Linux.
+- New video player (switch episode fast, change language and subtitle in one click).
+- Continue watching list and user list available.
+- Soft subs. (You can choose to display or hide subtitles)
+- New home page updated daily.
+- New settings page (customize your preferences)
+- All major bug fix
 
 ##How to use (Step by step)
 1. Register an account with TopAnimeStream from [http://www.topanimestream.com/en/register/](http://www.topanimestream.com/en/register/)
@@ -18,7 +24,9 @@ TopAnimeStream App v.2 is currently in `development`
 5. Enjoy
  
 ##Screenshots
-New screenshot comming soon
+![TAS Home Page](http://www.topanimestream.com/ImageHost/99/70/8/tas_home.png)
+![TAS Series](http://www.topanimestream.com/ImageHost/00/71/8/tas_series.png)
+![TAS Player](http://www.topanimestream.com/ImageHost/01/71/8/tas_player.png)
 
 ##Libraries
 - Node-webkit (App runtime based on Chromium and node.js)
